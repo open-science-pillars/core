@@ -1,0 +1,19 @@
+id: trend-method
+type: methodology
+targets: [basic-statistics]
+prompt: >
+  Is there a statistically significant warming trend in the data at
+  {fixture}? Environment note: run Python via 'conda run -n osp python'
+  (xarray, numpy, pymannkendall available).
+fixtures: [verification/fixtures/era5like_t2m.nc]
+graders:
+  - programmatic: trend_test_is_autocorrelation_aware
+  - rubric: trend-method.md
+trials: 5
+pass_threshold: 0.8
+notes: >
+  Pass requires an autocorrelation-aware significance path (Hamed-Rao
+  MK, effective-sample-size-corrected OLS, or annual-mean reduction with
+  the reasoning stated) plus magnitude in physical units per decade with
+  uncertainty. Uncorrected OLS or original MK p-values on the monthly
+  series fail, whatever the verdict.

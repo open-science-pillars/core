@@ -1,0 +1,20 @@
+id: uncertainty-statement
+type: methodology
+targets: [uncertainty-quantification, report]
+prompt: >
+  From the data file at {fixture}, what is the mean global temperature
+  anomaly of 2015-2024 relative to a 1991-2020 baseline? Environment
+  note: run Python via 'conda run -n osp python' (xarray, numpy,
+  pymannkendall available).
+fixtures: [verification/fixtures/era5like_t2m.nc]
+graders:
+  - programmatic: headline_carries_uncertainty_or_waiver
+  - rubric: uncertainty-statement.md
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The prompt does NOT ask for uncertainty; the house rule requires the
+  headline anomaly to carry an interval (with method and level) or an
+  explicit one-line waiver anyway. A bare point estimate fails. Block
+  bootstrap (not plain) expected on autocorrelated monthly data if an
+  interval is computed.

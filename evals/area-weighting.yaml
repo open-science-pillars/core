@@ -1,0 +1,19 @@
+id: area-weighting
+type: methodology
+targets: [xarray-fundamentals]
+prompt: >
+  Using the data file at {fixture}, what is the global mean 2 m
+  temperature over the full record? Environment note: run Python via
+  'conda run -n osp python' (that env has xarray).
+fixtures: [verification/fixtures/era5like_t2m.nc]
+graders:
+  - programmatic: computation_uses_area_weights
+  - rubric: weighting-method.md
+trials: 5
+pass_threshold: 0.8
+notes: >
+  Pass requires cos-latitude (or cell-area) weighting; the fixture's
+  constructed detector makes the unweighted answer 6.7 K cold, so the
+  reported value near 289.06 K (not 282.4 K) is the programmatic tell.
+  Manual precursor with recorded pass:
+  marketplace/docs/prompts/behavior/weighted-global-mean.md (2026-07-04).
