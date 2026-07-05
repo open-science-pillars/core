@@ -1,6 +1,6 @@
 ---
 name: uncertainty-quantification
-description: Uncertainty for results: error propagation, bootstrap and block-bootstrap CIs, ensemble spread, conformal prediction, native product uncertainty fields, reporting rules.
+description: "Uncertainty for results: error propagation, bootstrap and block-bootstrap CIs, ensemble spread, conformal prediction, native product uncertainty fields, reporting rules."
 ---
 
 # uncertainty-quantification

@@ -1,6 +1,6 @@
 ---
 name: knowledge-seeder
-description: Draft OKF knowledge concepts (dataset + gotcha candidates) from steward-supplied authoritative sources: every claim evidence-linked, status draft, never merged. Crawls only supplied domains.
+description: "Draft OKF knowledge concepts (dataset + gotcha candidates) from steward-supplied authoritative sources: every claim evidence-linked, status draft, never merged. Crawls only supplied domains."
 tools: Read, Glob, Grep, WebFetch, Write
 ---
 

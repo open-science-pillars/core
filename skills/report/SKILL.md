@@ -1,6 +1,6 @@
 ---
 name: report
-description: Assemble an analysis report: Data Description, Methods, Results with uncertainty statements, Quality Notes, Provenance citing knowledge concepts, Reproducibility.
+description: "Assemble an analysis report: Data Description, Methods, Results with uncertainty statements, Quality Notes, Provenance citing knowledge concepts, Reproducibility."
 ---
 
 # report

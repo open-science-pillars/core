@@ -1,6 +1,6 @@
 ---
 name: cartography
-description: Publication-quality maps with cartopy: projections, uniform colormaps, stippling and uncertainty visualization, multi-panel layouts, Hovmoller.
+description: "Publication-quality maps with cartopy: projections, uniform colormaps, stippling and uncertainty visualization, multi-panel layouts, Hovmoller."
 user-invocable: false
 ---
 

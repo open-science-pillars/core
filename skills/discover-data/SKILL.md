@@ -1,6 +1,6 @@
 ---
 name: discover-data
-description: Find earth science datasets for a research need: parse to parameters, search Earthdata, compare candidates, surface knowledge-bundle gotchas.
+description: "Find earth science datasets for a research need: parse to parameters, search Earthdata, compare candidates, surface knowledge-bundle gotchas."
 ---
 
 # discover-data

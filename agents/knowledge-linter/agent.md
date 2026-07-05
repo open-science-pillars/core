@@ -1,6 +1,6 @@
 ---
 name: knowledge-linter
-description: Health-check an OKF knowledge bundle: frontmatter, evidence links, reachability, staleness, eval-case coverage, imperative phrasing. Proposes fixes as diffs; never modifies.
+description: "Health-check an OKF knowledge bundle: frontmatter, evidence links, reachability, staleness, eval-case coverage, imperative phrasing. Proposes fixes as diffs; never modifies."
 tools: Read, Glob, Grep, WebFetch
 ---
 

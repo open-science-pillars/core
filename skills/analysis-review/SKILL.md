@@ -1,6 +1,6 @@
 ---
 name: analysis-review
-description: Post-computation sanity checks: area weighting, autocorrelation in trends, baselines, projections, budget grid, uncertainty reported, smell-test ranges.
+description: "Post-computation sanity checks: area weighting, autocorrelation in trends, baselines, projections, budget grid, uncertainty reported, smell-test ranges."
 ---
 
 # analysis-review

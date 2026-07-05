@@ -1,6 +1,6 @@
 ---
 name: quality-control
-description: QC for geophysical data: completeness, physical-bounds checks, fill-value audit, satellite QA flag decoding, discontinuity detection.
+description: "QC for geophysical data: completeness, physical-bounds checks, fill-value audit, satellite QA flag decoding, discontinuity detection."
 ---
 
 # quality-control

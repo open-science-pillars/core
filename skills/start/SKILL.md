@@ -1,6 +1,6 @@
 ---
 name: start
-description: Session orientation: list installed science plugins, connector status, local config, available workflow skills, one suggested next step.
+description: "Session orientation: list installed science plugins, connector status, local config, available workflow skills, one suggested next step."
 ---
 
 # start
