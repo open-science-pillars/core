@@ -76,7 +76,11 @@ trend_per_decade = res.slope * 120   # slope is per time step; 120 months/decade
 
 Read the result carefully: `res.slope` is **per time step** (per month
 here), so scale by 120 for K/decade; `res.trend` is the categorical call;
-`res.p` reflects the autocorrelation correction. On the core verification
+`res.p` reflects the autocorrelation correction. Known failure mode: on
+some series (observed on about 1.5% of grid cells in per-cell map use,
+2026-07-04) the Hamed-Rao variance correction returns NaN; detect it and
+fall back to `original_test` deliberately, stating the fallback, rather
+than letting NaN cells silently read as non-significant. On the core verification
 fixture this recovers the constructed trend (0.199 vs 0.20 K/decade,
 verified 2026-07-04). The fixture's AR(1) noise (phi = 0.5 by
 construction) is why Hamed-Rao is the right default there; its imposed
