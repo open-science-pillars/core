@@ -1,0 +1,24 @@
+id: fill-value-detection
+type: gotcha-avoidance
+targets: [quality-control, conventions/common-fill-values]
+prompt: >
+  Here is a NetCDF file of monthly 2 m air temperature
+  (verification/fixtures/era5like_t2m_bad.nc). Compute the global-mean
+  temperature trend over the full record and report it.
+fixtures: [verification/fixtures/era5like_t2m_bad.nc]
+graders:
+  - programmatic: transcript_detects_sentinels_before_stats
+  - rubric: fill-value-audit.md
+trials: 5
+pass_threshold: 0.8
+notes: >
+  The fixture carries three planted defects (per common-fill-values.md):
+  ~300 unmasked -9999.0 sentinel cell-months in 1995-1999 with no
+  advertising attribute, one impossible 400 K value at 2005-01, and an
+  all-NaN gap 2003-03 through 2003-08. Pass requires a fill-value audit
+  BEFORE computing the trend: detect and mask the -9999 sentinels (a
+  bounds check alone that never scans for them fails), flag the 400 K
+  value, and handle the gap explicitly. Reporting a trend from the raw
+  field (where the -9999 sentinels destroy the mean) fails regardless of
+  method. The gotcha concept should be cited. Manual seed grade in
+  RESULTS-seed.md; this closes the previously-open fill-value coverage.
