@@ -33,7 +33,7 @@ TREND_K_PER_DECADE = 0.20   # imposed global-mean linear trend
 BASE_GLOBAL_MEAN_K = 287.5  # approximate area-weighted mean, start of record
 
 
-def make_era5like_t2m(path: Path) -> xr.Dataset:
+def _build_era5like() -> xr.Dataset:
     """ERA5-like monthly t2m: zonal structure + seasonal cycle + trend + AR(1) noise.
 
     Composition, all deterministic under SEED:
@@ -106,6 +106,55 @@ def make_era5like_t2m(path: Path) -> xr.Dataset:
             "license": "public domain (synthetic)",
         },
     )
+    return ds
+
+
+def make_era5like_t2m(path: Path) -> xr.Dataset:
+    ds = _build_era5like()
+    ds.to_netcdf(path, encoding={"t2m": {"zlib": True, "complevel": 4}})
+    return ds
+
+
+# Bad-data variant (Session 4, for the QC behavior tests). Defect
+# parameters are documented HERE and in the fixtures README, deliberately
+# not in the file's own attributes, so QC tests stay honest.
+BAD_SENTINEL = -9999.0
+BAD_IMPOSSIBLE_K = 400.0                     # above every hard bound for t2m
+BAD_IMPOSSIBLE_IDX = (240, 18, 36)           # 2005-01, near-equator cell
+BAD_GAP = ("2003-03-01", "2003-08-31")       # six consecutive months, all NaN
+BAD_N_SENTINELS = 300                        # scattered cell-months, 1995-1999
+
+
+def make_bad_data(path: Path) -> xr.Dataset:
+    """era5like field with three injected defects for the six QC checks:
+
+    1. unmasked sentinels: BAD_N_SENTINELS cell-months set to -9999.0 with
+       no _FillValue/missing_value advertising them (they decode as data);
+    2. one impossible value: 400 K at BAD_IMPOSSIBLE_IDX;
+    3. a six-month all-NaN gap: BAD_GAP inclusive.
+
+    Sentinels are drawn from 1995-1999 so they never collide with the gap
+    or the impossible value. Attributes intentionally do not mention the
+    defects.
+    """
+    ds = _build_era5like()
+    data = ds.t2m.values
+    rng = np.random.default_rng(SEED + 1)
+
+    years = ds.time.dt.year.values
+    ok_t = np.where((years >= 1995) & (years <= 1999))[0]
+    it = rng.choice(ok_t, BAD_N_SENTINELS)
+    iy = rng.integers(0, ds.lat.size, BAD_N_SENTINELS)
+    ix = rng.integers(0, ds.lon.size, BAD_N_SENTINELS)
+    data[it, iy, ix] = BAD_SENTINEL
+
+    data[BAD_IMPOSSIBLE_IDX] = BAD_IMPOSSIBLE_K
+
+    gap = (ds.time >= np.datetime64(BAD_GAP[0])) & (ds.time <= np.datetime64(BAD_GAP[1]))
+    data[np.where(gap.values)[0], :, :] = np.nan
+
+    ds.attrs["title"] = "Synthetic monthly 2 m temperature test data"
+    ds.attrs["note"] = "Synthetic data for testing only; not ERA5."
     ds.to_netcdf(path, encoding={"t2m": {"zlib": True, "complevel": 4}})
     return ds
 
@@ -135,6 +184,23 @@ def main() -> None:
         "fitted trend drifted from the imposed trend"
     assert stats["weighting_bias_K"] < -1.0, \
         "unweighted mean should be biased cold by more than 1 K"
+
+    bad_out = HERE / "era5like_t2m_bad.nc"
+    bad = make_bad_data(bad_out)
+    v = bad.t2m.values
+    n_sent = int((v == BAD_SENTINEL).sum())
+    gap = (bad.time >= np.datetime64(BAD_GAP[0])) & (bad.time <= np.datetime64(BAD_GAP[1]))
+    gap_all_nan = bool(np.isnan(v[np.where(gap.values)[0]]).all())
+    print(f"wrote {bad_out} ({bad_out.stat().st_size / 1e6:.1f} MB)")
+    print(f"  sentinels: {n_sent}, max value: {np.nanmax(v):.1f} K, "
+          f"gap {BAD_GAP[0]}..{BAD_GAP[1]} all-NaN: {gap_all_nan}")
+    assert 0 < n_sent <= BAD_N_SENTINELS, "sentinel injection failed"
+    assert float(np.nanmax(v)) == BAD_IMPOSSIBLE_K, "impossible value missing"
+    assert gap_all_nan and int(gap.sum()) == 6, "gap injection failed"
+
+    roundtrip = xr.open_dataset(bad_out)
+    assert float(roundtrip.t2m.min()) == BAD_SENTINEL, \
+        "sentinels must survive the round trip unmasked"
 
 
 if __name__ == "__main__":
