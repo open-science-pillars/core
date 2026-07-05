@@ -7,8 +7,7 @@ user-invocable: false
 # data-formats
 
 Background expertise for opening earth science data files correctly on the
-first try, and for diagnosing the openings that fail. Authored in Session 2
-per SPECIFICATION.md v0.5.1 §3.3.
+first try, and for diagnosing the openings that fail.
 
 ## Identify the format first: magic bytes, not extensions
 

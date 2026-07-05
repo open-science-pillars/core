@@ -6,10 +6,8 @@ description: "QC for geophysical data: completeness, physical-bounds checks, fil
 # quality-control
 
 Quality control for geophysical datasets: invocable directly ("run QC on
-this dataset") and consulted automatically before analysis. Authored in
-Session 4 per SPECIFICATION.md v0.5.1 §3.3. The six-check structure
-reconstructs the v0.1 enumeration referenced by SPEC §9 (the v0.1 text is
-not in this workspace; flagged, not silently improvised).
+this dataset") and consulted automatically before analysis. The six-check structure
+reconstructs the v0.1 enumeration referenced by SPEC §9.
 
 ## The six checks, in order
 

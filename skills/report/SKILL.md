@@ -6,7 +6,7 @@ description: "Assemble an analysis report: Data Description, Methods, Results wi
 # report
 
 Assemble the session's analysis into a report a colleague can trust and
-rerun. Authored in Session 5 per SPECIFICATION.md v0.5.1 §3.4. Works by
+rerun. Works by
 slash command or conversationally ("write this up"). The report renders
 what was actually computed this session; it never invents numbers,
 methods, or citations.

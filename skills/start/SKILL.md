@@ -6,8 +6,7 @@ description: "Session orientation: list installed science plugins, connector sta
 # start
 
 Orient the scientist in one screen: what is installed, what is connected,
-what is configured, and what to do next. Authored in Session 5 per
-SPECIFICATION.md v0.5.1 §3.4. Works identically invoked by slash command
+what is configured, and what to do next. Works identically invoked by slash command
 or by asking conversationally ("what science tools do I have here?").
 
 ## Behavior

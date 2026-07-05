@@ -6,9 +6,7 @@ user-invocable: false
 
 # cartography
 
-Background expertise for maps and figures that survive review. Authored in
-Session 3 per SPECIFICATION.md v0.5.1 §3.3, including the
-uncertainty-visualization addition.
+Background expertise for maps and figures that survive review.
 
 ## Projections
 

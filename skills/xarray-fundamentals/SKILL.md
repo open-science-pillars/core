@@ -7,8 +7,7 @@ user-invocable: false
 # xarray-fundamentals
 
 Background expertise for manipulating gridded earth science data with
-xarray without the classic silent errors. Authored in Session 2 per
-SPECIFICATION.md v0.5.1 §3.3.
+xarray without the classic silent errors.
 
 ## Selection
 

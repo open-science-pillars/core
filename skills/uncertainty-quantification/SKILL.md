@@ -7,8 +7,7 @@ description: "Uncertainty for results: error propagation, bootstrap and block-bo
 
 How results earn their error bars: invocable directly ("put a confidence
 interval on this") and consulted automatically whenever a quantitative
-result heads for a report. Authored in Session 4 per SPECIFICATION.md
-v0.5.1 §3.3 (full scope).
+result heads for a report.
 
 ## The house reporting rule
 

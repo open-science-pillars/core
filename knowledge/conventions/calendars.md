@@ -6,7 +6,7 @@ tags: [calendar, cftime, seasons, djf, time]
 timestamp: 2026-07-04
 status: verified
 verified: 2026-07-04
-verified_by: Paul Ramirez (steward pro tem)
+verified_by: OSP steward review
 ---
 
 # Calendar handling, and the DJF year-boundary trap

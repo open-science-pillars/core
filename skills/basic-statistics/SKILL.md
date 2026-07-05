@@ -7,8 +7,7 @@ user-invocable: false
 # basic-statistics
 
 Background expertise for the statistics that climate and geophysical
-analyses actually run on, with the traps that make them silently wrong.
-Authored in Session 3 per SPECIFICATION.md v0.5.1 §3.3. Mechanics of
+analyses actually run on, with the traps that make them silently wrong. Mechanics of
 groupby, resample, and weighting live in xarray-fundamentals; uncertainty
 methods (bootstrap variants, intervals) live in uncertainty-quantification.
 

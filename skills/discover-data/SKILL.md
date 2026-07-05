@@ -6,7 +6,7 @@ description: "Find earth science datasets for a research need: parse to paramete
 # discover-data
 
 Turn a research need into a shortlist of concrete datasets with honest
-caveats. Authored in Session 5 per SPECIFICATION.md v0.5.1 §3.4. Works
+caveats. Works
 by slash command or conversationally ("what SST data should I use for
 the North Atlantic?"). Recommends only; loading data is a separate,
 gated step owned by the loader workflows.

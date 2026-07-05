@@ -6,8 +6,7 @@ description: "Post-computation sanity checks: area weighting, autocorrelation in
 # analysis-review
 
 The post-computation review: invocable directly ("review this analysis")
-and run before results are reported. Authored in Session 4 per
-SPECIFICATION.md v0.5.1 §3.3, including the three UQ checks. Review what
+and run before results are reported. Review what
 was computed (the code and outputs), not what the prose claims.
 
 ## Verdict format

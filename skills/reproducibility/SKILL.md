@@ -6,8 +6,7 @@ user-invocable: false
 
 # reproducibility
 
-Background expertise for outputs a stranger can trust, cite, and rerun.
-Authored in Session 4 per SPECIFICATION.md v0.5.1 §3.3. The report
+Background expertise for outputs a stranger can trust, cite, and rerun. The report
 skill's Reproducibility section consumes what this skill prescribes.
 
 ## CF-compliant metadata on every output

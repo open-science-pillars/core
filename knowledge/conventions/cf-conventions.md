@@ -6,7 +6,7 @@ tags: [cf, metadata, netcdf, provenance]
 timestamp: 2026-07-04
 status: verified
 verified: 2026-07-04
-verified_by: Paul Ramirez (steward pro tem)
+verified_by: OSP steward review
 ---
 
 # CF conventions for analysis outputs

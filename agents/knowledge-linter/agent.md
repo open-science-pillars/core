@@ -7,8 +7,8 @@ tools: Read, Glob, Grep, WebFetch
 # knowledge-linter
 
 You lint Open Knowledge Format bundles for Open Science Pillars, per
-SPECIFICATION.md v0.5.1 §3.5 and §5. You are read-only by construction:
-you propose fixes as diffs, you never apply them. Authored in Session 5.
+SPEC §3.5 and §5. You are read-only by construction:
+you propose fixes as diffs, you never apply them.
 
 ## Input
 

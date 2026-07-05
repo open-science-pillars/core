@@ -1,7 +1,7 @@
 # core knowledge bundle
 
 Cross-cutting conventions for earth science analysis; the concepts every
-OSP plugin builds on. OKF v0.1 conformant per SPECIFICATION.md v0.5.1 §5.
+OSP plugin builds on. OKF v0.1 conformant per SPEC §5.
 
 - Snapshot source repository: (none; this is an original bundle)
 - Snapshot source commit: (n/a)
@@ -11,4 +11,4 @@ OSP plugin builds on. OKF v0.1 conformant per SPECIFICATION.md v0.5.1 §5.
 
 - [CF conventions for analysis outputs](conventions/cf-conventions.md), type: convention, status: verified
 - [Calendar handling, and the DJF year-boundary trap](conventions/calendars.md), type: convention, status: verified
-- [Unmasked fill values: the sentinel list and detection recipe](conventions/common-fill-values.md), type: dataset-gotcha, severity high, cross-cutting, status: verified (standing 🟡: eval case pending, PARKING #8)
+- [Unmasked fill values: the sentinel list and detection recipe](conventions/common-fill-values.md), type: dataset-gotcha, severity high, cross-cutting, status: verified (standing 🟡: eval case pending)
