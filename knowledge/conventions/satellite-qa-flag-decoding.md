@@ -4,9 +4,11 @@ title: "Satellite QA flag decoding: MODIS, Landsat Collection 2, Sentinel-2"
 description: "Bit and class layouts for decoding satellite QA layers: MODIS VI Quality, Landsat C2 QA_PIXEL, Sentinel-2 SCL; used by the QC QA-flag check."
 tags: [qc, qa-flags, modis, landsat, sentinel-2, bitfield]
 timestamp: 2026-07-05
-status: draft
+status: verified
+verified: 2026-07-06
+verified_by: OSP steward review
 evidence:
-  - "internal: relocated from core/skills/quality-control/SKILL.md during the knowledge-coupling migration, needs a steward evidence link"
+  - https://www.usgs.gov/landsat-missions/landsat-collection-2-quality-assessment-bands
 ---
 
 # Satellite QA flag decoding

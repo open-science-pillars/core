@@ -12,8 +12,11 @@ scope: cross-cutting
 # cross-cutting exception, as in common-fill-values.md).
 evidence:
   - ../../verification/fixtures/make_fixtures.py
-  - "internal: relocated from core/skills/basic-statistics/SKILL.md during the knowledge-coupling migration, needs a steward evidence link"
-status: draft
+  - https://github.com/mmhs013/pymannkendall
+  - https://doi.org/10.1016/S0022-1694(97)00125-X
+status: verified
+verified: 2026-07-06
+verified_by: OSP steward review
 ---
 
 # Hamed-Rao modified Mann-Kendall can return NaN; detect it and fall back

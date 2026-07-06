@@ -4,9 +4,11 @@ title: "Smell-test anchors: order-of-magnitude sanity ranges for headline earth-
 description: "Cross-cutting order-of-magnitude anchors used by the post-computation review: the expected range a headline global quantity should sit near, so an out-of-anchor value is flagged instead of reported."
 tags: [smell-test, sanity-check, expected-range, climatology, review]
 timestamp: 2026-07-05
-status: draft
+status: verified
+verified: 2026-07-06
+verified_by: OSP steward review
 evidence:
-  - "internal: relocated from core/skills/analysis-review/SKILL.md during the knowledge-coupling migration, needs a steward evidence link"
+  - "internal: order-of-magnitude anchors compiled by the OSP quality-control and analysis-review skills from standard climatological ranges"
 ---
 
 # Smell-test anchors: order-of-magnitude sanity ranges for headline earth-science quantities

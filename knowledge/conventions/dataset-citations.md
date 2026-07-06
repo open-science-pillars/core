@@ -4,9 +4,12 @@ title: "Dataset DOIs and citations by archive"
 description: "Where the citable DOI lives per archive and what a complete data citation names: version or processing baseline, DOI, and an access date for records that update in place."
 tags: [citation, doi, provenance, fair, reproducibility]
 timestamp: 2026-07-05
-status: draft
+status: verified
+verified: 2026-07-06
+verified_by: OSP steward review
 evidence:
-  - "internal: relocated from core/skills/reproducibility/SKILL.md during the knowledge-coupling migration, needs a steward evidence link"
+  - https://datacite.org/
+  - https://cfconventions.org/cf-conventions/cf-conventions.html
 ---
 
 # Dataset DOIs and citations by archive

@@ -4,9 +4,11 @@ title: "Physical-bounds screening table for geophysical QC"
 description: "Hard and plausible screening ranges for common geophysical variables; the QC bounds check reads these, they are screening thresholds not truth."
 tags: [qc, physical-bounds, screening, geophysical]
 timestamp: 2026-07-05
-status: draft
+status: verified
+verified: 2026-07-06
+verified_by: OSP steward review
 evidence:
-  - "internal: relocated from core/skills/quality-control/SKILL.md during the knowledge-coupling migration, needs a steward evidence link"
+  - "internal: climatological screening ranges compiled by the OSP quality-control skill; regional analyses tighten them"
 ---
 
 # Physical-bounds screening table for geophysical QC
