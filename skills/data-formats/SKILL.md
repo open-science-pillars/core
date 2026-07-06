@@ -9,6 +9,21 @@ user-invocable: false
 Background expertise for opening earth science data files correctly on the
 first try, and for diagnosing the openings that fail.
 
+## Consult the knowledge bundle; do not carry dataset facts here
+
+Fill-value sentinel lists, calendar and season conventions, and the CF
+metadata contract are dataset knowledge. They live once in the core
+knowledge bundle and are consulted dynamically, never memorized in this
+skill. Before reporting anything that turns on them, discover the
+applicable concepts (glob and grep `core/knowledge/`; the ones this skill
+leans on are `conventions/common-fill-values.md`,
+`conventions/calendars.md`, and `conventions/cf-conventions.md`), read
+them, restate the relevant point, and cite it. When a concept and this
+skill disagree, the concept wins.
+
+The tables below (magic bytes, openers, failure symptoms) are invariant
+format method, not dataset facts, and stay here as procedure.
+
 ## Identify the format first: magic bytes, not extensions
 
 Extensions lie. A `.nc` file can be classic NetCDF-3 or HDF5-based
@@ -57,15 +72,17 @@ medium (Dask cluster), large (HPC or burst) per SPEC §0.4.
 traps:
 
 1. **Unmasked sentinels.** Files that omit the `_FillValue` attribute but
-   use sentinel values anyway (-9999, -32767, 1e20 and kin) decode as real
-   data and silently bias every statistic. After opening, check
-   `float(var.min())` and `float(var.max())` against physical plausibility
-   before computing anything. The core knowledge bundle's
-   `conventions/common-fill-values.md` concept carries the sentinel list
-   and detection recipe.
+   use sentinel values anyway decode as real data and silently bias every
+   statistic. The sentinel list and the detection recipe are dataset
+   knowledge: consult `conventions/common-fill-values.md`, restate and
+   cite it, and do not reproduce the values here. The refusal that guards
+   this trap is in Hard refusals below.
 2. **Packed integers.** If a variable that should be continuous arrives as
    int16, packing attributes were probably lost or ignored; check
-   `var.encoding` for `scale_factor` before trusting values.
+   `var.encoding` for `scale_factor` before trusting values. The CF
+   packed-data rule itself (how `scale_factor` and `add_offset` reconstruct
+   physical values) is a metadata convention: consult
+   `conventions/cf-conventions.md`.
 
 ## Time decoding
 
@@ -75,15 +92,18 @@ calendars (`360_day`, `noleap`, `all_leap`) need cftime objects: pass
 direct numpy datetime comparisons do not). When decoding fails, open with
 `decode_times=False`, inspect `time.attrs["units"]` and
 `time.attrs["calendar"]`, repair, then `xr.decode_cf(ds)`. The
-`conventions/calendars.md` concept records the DJF year-boundary trap.
+`conventions/calendars.md` concept owns the CF calendar list, the
+month-length weighting rule, and the DJF year-boundary trap; consult and
+cite it rather than restating those here.
 
 ## CRS and coordinates
 
 - GeoTIFF via rioxarray: CRS lives at `da.rio.crs`; reproject with
   `da.rio.reproject(...)`. Never assume EPSG:4326.
-- NetCDF: CF encodes projection in a `grid_mapping` variable; projected
-  data has `x`/`y` coordinates in meters, not degrees. Check before
-  treating coordinates as lat/lon.
+- NetCDF: CF encodes projection in a `grid_mapping` variable (its contract
+  lives in `conventions/cf-conventions.md`); projected data has `x`/`y`
+  coordinates in meters, not degrees. Check before treating coordinates as
+  lat/lon.
 - Longitude arrives as either 0..360 or -180..180; normalize deliberately
   (`ds.assign_coords(lon=(ds.lon + 180) % 360 - 180).sortby("lon")`) and
   say which convention the output uses.
@@ -102,7 +122,7 @@ direct numpy datetime comparisons do not). When decoding fails, open with
 | variable is all NaN after open | bad `_FillValue`/`valid_range` attrs masking everything | `mask_and_scale=False`, inspect raw values and attrs, mask manually |
 | times are `object` dtype strings (CSV) | dates not parsed | `parse_dates=` in `read_csv`, then `.to_xarray()` |
 
-## Must NOT
+## Hard refusals (stop; never proceed past these)
 
 - Never trust a file extension over magic bytes.
 - Never report a statistic before confirming fill values are masked.

@@ -9,8 +9,9 @@ How results earn their error bars: invocable directly ("put a confidence
 interval on this") and consulted automatically whenever a quantitative
 result heads for a report.
 
-## The house reporting rule
+## The house reporting rule (hard rule)
 
+Hard rule: invariant, universal, fires without consulting the bundle.
 **No headline quantitative result without an uncertainty statement (an
 interval, a spread, or the product's native uncertainty), or an explicit
 one-line reason why none is available.** Every stated interval carries
@@ -67,17 +68,25 @@ a justification, when r1 is large.
 
 ## Native product uncertainty fields
 
-Before analyzing any dataset, read its dataset concept's
-`## Uncertainty` section (knowledge-first): it names the product's error
-fields and their caveats. Examples in this org's bundles: GHRSST MUR's
-analysis-error field, SWOT's ssha uncertainty variables, GRACE-FO mascon
-error grids; ECCO ships no formal error fields (dynamical consistency
-stands in, and that must be said plainly when quoting ECCO numbers).
-Use the fields, do not just map them: propagate them into the derived
-quantity. Spatially correlated errors do not average down like white
-noise; a basin mean of a field with correlated errors keeps most of the
-error unless the product documents its error correlation scale. State
-the assumption used.
+**Consult the bundle for this dataset (standing step).** Before
+analyzing any product, DISCOVER its concept in the installed knowledge
+bundles instead of working from a remembered list of which products ship
+which error fields: glob and grep `knowledge/datasets/` (and
+`knowledge/gotchas/`) by product name, read the matching concept's
+`## Uncertainty` section, and restate and cite what it says the
+product's native error fields and their caveats are. That section is the
+single source for whether a product ships an uncertainty field, what it
+captures, and what it omits (including products that ship none, where
+that fact must be stated plainly when quoting their numbers). Do not
+carry those product facts here; a concept added or corrected since you
+last ran is found this way.
+
+Then apply the invariant method the concept does not restate: use the
+fields, do not just map them, propagate them into the derived quantity.
+Spatially correlated errors do not average down like white noise; a
+basin mean of a field with correlated errors keeps most of the error
+unless the product documents its error correlation scale. State the
+assumption used.
 
 ## Ensemble spread
 
@@ -120,7 +129,12 @@ consume bounds, not points, so tightening honest intervals is scientific
 work with direct value, and overstating a point estimate without an
 interval is not a shortcut, it is an unverifiable claim.
 
-## Must NOT
+## Must NOT (hard refusals)
+
+These are the skill's hard refusals: invariant, universal statistical
+gates that fire without consulting the bundle (none of them restates a
+dataset gotcha; product uncertainty facts are consulted, not listed
+here).
 
 - Never present an ensemble mean without its spread.
 - Never treat quality flags as quantitative uncertainty (they are
