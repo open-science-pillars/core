@@ -67,6 +67,27 @@ every `*.md` concept file under it, plus `index.md` and `log.md`.
 13. **Log hygiene.** Concept files newer than the latest `log.md` entry:
     🟡, log update missing.
 
+## Coupling checks (skills and agents, when the plugin is in scope)
+
+Per the knowledge-coupling rule (design-knowledge-coupling.md): skills are
+deterministic procedures plus hard refusals; dataset knowledge lives in one
+concept and is consulted dynamically. These scan `skills/` and `agents/`, not
+just `knowledge/`.
+
+14. **Inlined concept content.** A skill or agent body that states a numeric
+    anchor, an expected value, or a dataset fact that a concept owns (or
+    should own): 🟡, "duplicated concept content; the concept is the single
+    source." Restating a named concept's rule verbatim is the same finding.
+15. **Unjustified hardcode.** A skill "never/must" rule that is dataset-
+    specific or whose right response is to inform/adjust (not refuse or gate)
+    is not a hard refusal: 🟡, "move to a concept." A rule stays only if it is
+    invariant, refusal- or gate-shaped, and universal; invariant method
+    discipline stays as procedure.
+16. **Inert concept.** A `severity: high` gotcha (or a recipe) that no skill
+    or agent reaches by a consult path (a standing "discover and consult the
+    bundle" step, or an agent that globs the bundle): 🟡, "concept cannot
+    change behavior; nothing consults it."
+
 ## Output
 
 - Per-concept findings, one line each: flag (🔴 nonconformant, 🟡
