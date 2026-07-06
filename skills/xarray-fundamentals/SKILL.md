@@ -7,7 +7,23 @@ user-invocable: false
 # xarray-fundamentals
 
 Background expertise for manipulating gridded earth science data with
-xarray without the classic silent errors.
+xarray without the classic silent errors. What follows is invariant
+method: the procedures and hard refusals hold across products. Facts that
+belong to a dataset or a convention (calendar behavior and the DJF trap,
+CF metadata and cell bounds, fill-value sentinels) are NOT restated here;
+they are read from the bundle per the standing step below.
+
+## Consult the bundle for this analysis
+
+Before applying this method to a specific dataset, DISCOVER and consult
+the installed knowledge bundle; do not work from a remembered list of
+rules. Glob and grep `core/knowledge/` (conventions/, gotchas/) for every
+concept touching the products, quantities, and conventions in play
+(calendars and the DJF year-boundary trap, CF metadata and cell bounds,
+fill-value sentinels), read the matches, restate what each changes about
+the plan before computing, and cite it by path. A concept added or
+corrected since you last ran is found this way, and is never carried as a
+restated fact in this skill.
 
 ## Selection
 
@@ -40,14 +56,15 @@ clim = base.groupby("time.month").mean("time")
 anom = ds.groupby("time.month") - clim
 ```
 
-**A climatology or anomaly is meaningless without its baseline; state the
-baseline period (for example 1991-2020) in the output, every time.**
+**Hard refusal: a climatology or anomaly is meaningless without its
+baseline; state the baseline period (for example 1991-2020) in the
+output, every time.**
 
-Seasonal means: `resample(time="QS-DEC").mean()` puts December with the
-following January and February. `groupby("time.season")` labels months
-DJF/MAM/JJA/SON but groups December with its own calendar year's January
-and February, which is almost never what a DJF mean intends; the
-`conventions/calendars.md` concept records this trap.
+Seasonal means are a trap when a season crosses the year boundary (DJF):
+`resample(time="QS-DEC").mean()` and `groupby("time.season")` are not
+interchangeable, and which one is correct is governed by the DJF
+year-boundary trap. That trap is a bundle convention, not a rule this
+skill carries; consult it and cite it per the standing step above.
 
 ## Area-weighted means: never unweighted
 
@@ -55,7 +72,7 @@ Grid cells shrink toward the poles on regular lat-lon grids. An unweighted
 `.mean(["lat", "lon"])` over-weights high latitudes and silently biases
 every global or regional statistic; for global mean surface temperature
 the bias is on the order of tenths of a degree, comparable to the signals
-being studied. The rule: **spatial means over a lat-lon grid are
+being studied. **Hard refusal: spatial means over a lat-lon grid are
 cos(latitude)-weighted, always.**
 
 ```python
@@ -93,25 +110,26 @@ gm = ds.weighted(weights).mean(["lat", "lon"])
 
 ## cftime calendars
 
-Model and reanalysis output on `360_day`, `noleap`, or `all_leap`
-calendars decodes to cftime objects (`use_cftime=True` forces this).
-What works: `sel` with date strings, `resample`, `groupby("time.month")`.
-What breaks: direct comparison or arithmetic against numpy `datetime64`,
-and concatenating datasets on different calendars. Align calendars
-explicitly with `ds.convert_calendar("standard", align_on="date")` (or
-keep everything in cftime), and say so in the methods, since dropping
-February 29 or day-361 changes annual statistics slightly. The
-`conventions/calendars.md` concept carries the details.
+Model and reanalysis output frequently arrives on non-standard calendars
+that decode to cftime objects rather than numpy `datetime64`. Which
+operations are safe on cftime, why cross-calendar datasets do not combine,
+and what calendar alignment changes about annual statistics are owned by
+the calendars convention concept, not restated here; consult it per the
+standing step and state the calendar choice in the methods.
 
-## Must NOT
+## Hard refusals (invariant, universal; fire regardless of dataset)
 
 - Never compute an unweighted spatial mean over a lat-lon grid.
 - Never report a climatology or anomaly without stating the baseline
   period.
-- Never use `groupby("time.season")` for DJF means across the year
-  boundary; use `resample(time="QS-DEC")`.
-- Never compare cftime and numpy datetime values directly.
 - Never trigger eager computation on data larger than memory; check
   `nbytes`, chunk, and state the compute scale.
 - Never assume `open_mfdataset` produced a clean time axis; verify
   monotonicity and duplicates.
+
+The calendar traps (the DJF year-boundary mislabeling of
+`groupby("time.season")`, and cftime-vs-datetime64 comparison and
+concatenation) are NOT restated here as rules: they are owned by
+`conventions/calendars.md` and read from the bundle per the standing
+consult step. Consulting the concept is how a corrected or added rule
+changes this skill's behavior without editing it.

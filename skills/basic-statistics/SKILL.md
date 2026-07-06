@@ -11,6 +11,20 @@ analyses actually run on, with the traps that make them silently wrong. Mechanic
 groupby, resample, and weighting live in xarray-fundamentals; uncertainty
 methods (bootstrap variants, intervals) live in uncertainty-quantification.
 
+## Consult the bundle
+
+Before running these methods on a real product, DISCOVER and consult the
+installed knowledge bundle rather than working from remembered numbers.
+Glob and grep `knowledge/datasets/`, `knowledge/gotchas/`,
+`knowledge/recipes/`, and `knowledge/conventions/` for concepts touching
+the product, quantity, and method in play (the dataset's own gotchas, the
+calendar conventions, the method failure modes), read the matches, and
+restate and cite what each changes about the plan before computing. This
+file carries the procedure and the refusals only; dataset facts, expected
+numbers, observed failure rates, and gotcha rules live in concepts and are
+read from them per analysis, so a concept added or corrected since you last
+ran changes the behavior without editing this skill.
+
 ## Climatology and anomalies
 
 The canonical pattern and the two house rules:
@@ -75,17 +89,18 @@ trend_per_decade = res.slope * 120   # slope is per time step; 120 months/decade
 
 Read the result carefully: `res.slope` is **per time step** (per month
 here), so scale by 120 for K/decade; `res.trend` is the categorical call;
-`res.p` reflects the autocorrelation correction. Known failure mode: on
-some series (observed on about 1.5% of grid cells in per-cell map use,
-2026-07-04) the Hamed-Rao variance correction returns NaN; detect it and
-fall back to `original_test` deliberately, stating the fallback, rather
-than letting NaN cells silently read as non-significant. On the core verification
-fixture this recovers the constructed trend (0.199 vs 0.20 K/decade,
-verified 2026-07-04). The fixture's AR(1) noise (phi = 0.5 by
-construction) is why Hamed-Rao is the right default there; its imposed
-trend is strong enough that the original test happens to agree, which is
-exactly the situation where the uncorrected test builds false confidence
-for weaker real-world trends.
+`res.p` reflects the autocorrelation correction. Method note: the
+Hamed-Rao variance correction can return a NaN p-value on some series;
+detect it and fall back to `original_test` deliberately, stating the
+fallback, rather than letting NaN cells silently read as non-significant.
+The observed failure rate, the fallback rationale, and the fixture
+verification numbers are not carried here: glob `knowledge/gotchas/` for
+the Hamed-Rao NaN failure-mode concept and cite it. The reasoning that
+stays is method, not a dataset fact: when a trend is strong relative to
+its autocorrelated noise the uncorrected original test can happen to agree
+with the corrected one, which is exactly the case where the uncorrected
+test builds false confidence for weaker real-world trends, so the
+autocorrelation-aware test is the default.
 
 ## Composites
 
@@ -110,18 +125,22 @@ discovery rate rather than celebrating scattered stippling.
 - Sample size matters at the tails: a 99th percentile from 30 values is
   noise; say how many samples stand behind a quoted extreme.
 
-## Calendar handling for statistics
+## Calendar-aware statistics
 
-- Annual means from monthly data: weight by month length (or resample
-  from the underlying finer resolution); unweighted 12-month means bias
-  toward 28-day February, small but systematic.
-- DJF and other cross-year seasons: quarters anchored at December
-  (QS-DEC); the `conventions/calendars.md` concept records the trap.
-- Model calendars (360_day, noleap) change day counts in month-length
-  weights and percentile windows; compute weights from the actual
-  calendar, never from hardcoded day counts.
+Month-length weighting of annual and seasonal means, the DJF year-boundary
+(QS-DEC) trap, and taking day counts from the dataset's own calendar
+(360_day, noleap, and the rest) rather than a hardcoded table are calendar
+facts, not statistics: consult and cite `conventions/calendars.md` instead
+of carrying them here. The statistics-specific application to remember:
+day-of-year percentile windows are sized in calendar days too, so a model
+calendar reshapes the window just as it reshapes month-length weights;
+take both from the actual calendar.
 
-## Must NOT
+## Must NOT (hard refusals)
+
+These are hard refusals: statistical-validity gates that hold regardless
+of the dataset (invariant, universal, refusal-shaped), so they stay in the
+skill and fire without consulting anything.
 
 - Never run original Mann-Kendall or plain OLS significance on an
   autocorrelated series without the appropriate correction.

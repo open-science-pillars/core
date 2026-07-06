@@ -11,7 +11,21 @@ slash command or conversationally ("write this up"). The report renders
 what was actually computed this session; it never invents numbers,
 methods, or citations.
 
-## The confirmation gate (before anything is written)
+## Knowledge coupling (standing rule)
+
+This skill is a procedure, not a store of dataset facts. Every dataset
+detail the report states (product version, verification date, expected
+range, uncertainty framing, release caveat, convention, or gotcha) is
+discovered in the installed knowledge bundles, not remembered here:
+glob and grep `knowledge/` (core and any domain bundle in play) for the
+concepts touching the datasets, methods, and quantities reported, read
+the matches, restate what each says in the report's own words, and cite
+it by bundle path. A concept added or corrected since you last ran is
+picked up this way. The report carries none of these facts inline; when
+a stated fact has no owning concept, that gap is itself a Quality or
+Provenance note.
+
+## The confirmation gate (hard gate, before anything is written)
 
 Before writing any file, present:
 
@@ -34,8 +48,9 @@ Format: markdown by default; docx only when asked.
    method and its autocorrelation handling, calendar choices, block
    lengths and seeds for resampling methods. Specific enough to
    reimplement.
-3. **Results.** The findings, and **the house rule is enforced here:
-   every headline quantity carries an uncertainty statement (interval,
+3. **Results.** The findings, and **the house rule is enforced here
+   (hard refusal): every headline quantity carries an uncertainty
+   statement (interval,
    spread, or native product uncertainty) with method and level, or an
    explicit one-line reason why none is available.** A result that
    arrives without uncertainty goes back for one (or gets its waiver)
@@ -65,7 +80,7 @@ Format: markdown by default; docx only when asked.
   minimum a generation timestamp, tool identity, and input list in the
   document header.
 
-## Must NOT
+## Must NOT (hard refusals: invariant, universal, gate-shaped)
 
 - Never write a file before the gate is confirmed.
 - Never assemble a Results section containing a headline quantity with
