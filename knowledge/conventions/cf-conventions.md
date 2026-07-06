@@ -34,10 +34,17 @@ the most weight in practice:
 - **Missing data** is declared with `_FillValue` (CF §2.5.1); sentinel
   conventions that skip the attribute are the trap recorded in
   [common-fill-values](common-fill-values.md).
+- **Packed data**: integer variables carrying `scale_factor` and/or
+  `add_offset` reconstruct physical values as
+  `packed * scale_factor + add_offset` (CF §8.1); xarray applies this
+  when `mask_and_scale=True` (the default). Compute on the unpacked
+  values, and note that `_FillValue` is matched against the packed
+  integer before scaling.
 - **Global attributes**: `title`, `institution`, `source`,
-  `references`, `Conventions` (the CF version), and a `history` that
-  appends one timestamped line per processing step, newest first. The
-  history attribute is the provenance that travels with the file.
+  `references`, `Conventions` (the CF version), `license`, and a
+  `history` that appends one timestamped line per processing step,
+  newest first. The history attribute is the provenance that travels
+  with the file.
 
 Compliance checkers exist (the CF-checker, `cfchecks`) and catch most
 omissions mechanically; the items above are the ones that change

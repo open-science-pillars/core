@@ -2,6 +2,8 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-07-06 · steward addition: cf-conventions gains CF packed-data (scale_factor/add_offset) and the license global attribute.
+
 - 2026-07-06 · steward review PASSED: the 5 migration-draft concepts (smell-test-ranges, physical-bounds-screening, satellite-qa-flag-decoding, dataset-citations, hamed-rao-mk-nan) promoted draft to status: verified (verified_by OSP steward review); placeholder evidence replaced with resolving sources (NOAA CPC/NCEI/PSL for indices, published DOIs, TEOS-10, USGS, DataCite, pymannkendall, GRACE JPL, the ECCO variable catalog).
 
 - 2026-07-05 · knowledge-coupling migration (PARKING #14): core skills slimmed
