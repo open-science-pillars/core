@@ -9,7 +9,7 @@
 #     "matplotlib",
 # ]
 # ///
-# Core golden notebook (Session 5, SPEC v0.5.1 §6): the report skill's
+# Core golden notebook (SPEC v0.5.1 §6): the report skill's
 # computational substrate, end to end on the synthetic fixture:
 # load -> QC -> anomaly -> Mann-Kendall trend -> figure -> report.
 # Asserts section-complete report content, a knowledge-concept citation,
