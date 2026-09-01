@@ -16,3 +16,11 @@ jobs:
 # Data-requiring goldens (ocean-science and hydrology ECCO/NWIS budgets) need an
 # Earthdata login and cached granules; they run as a credentialed nightly job,
 # not in this per-PR secret-free workflow.
+
+  observations-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+      - name: Offline contract tests (parsers vs recorded fixtures)
+        run: uv run connectors/observations_mcp.py --test
