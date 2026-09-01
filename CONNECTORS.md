@@ -44,3 +44,38 @@ An Earthdata Login is needed only to retrieve data, never to search.
 It is read by earthaccess at download time and is never handled by
 this plugin, never sent to the connector above, and never stored in
 this repository in any form (SPEC §5.8).
+
+## Observations MCP (`observations`)
+
+**What it is.** `.mcp.json` runs `connectors/observations_mcp.py` from
+this plugin over stdio: one thin server exposing five authoritative
+observation sources as tools. USGS NWIS stream gauges, NOAA CO-OPS
+tide stations, Argo profiling floats (Ifremer ERDDAP), PSMSL
+long-record tide gauges, and PO.DAAC Hydrocron SWOT river series.
+Every tool is a paper-thin translation from parameters to one
+official HTTPS request; no science lives in the server.
+
+**What leaves your machine.** Query parameters only: station, gauge,
+float, and reach identifiers, bounding boxes, and time ranges, sent
+over HTTPS to the agency endpoint named in each tool. Every source is
+anonymous; no credential exists in this process. No file, no local
+path, and no data you hold is ever sent.
+
+**What does not go through it.** Archive holdings. ECCO, SWOT, and
+GRACE retrieval happens through earthaccess as always; this server
+fetches point observations only, and nothing attested ever calls it.
+
+**When it is unavailable.** Nothing breaks. Gates and attesters never
+depend on connectors; the knowledge concepts carry archive URLs for
+every source.
+
+**Where the facts are maintained.** Endpoint, tool surface, and the
+correctness knowledge (datum conventions, quality flags, reference
+offsets) are dated concepts with staleness dates: CO-OPS, Argo, and
+PSMSL in `knowledge/connectors/` of
+github.com/open-science-pillars/ocean-science; USGS and Hydrocron in
+`knowledge/connectors/` of github.com/open-science-pillars/hydrology.
+This file deliberately does not restate them.
+
+**Running from a checkout.** `uv run connectors/observations_mcp.py`
+from the repo root; `--selftest` probes all five sources live.
