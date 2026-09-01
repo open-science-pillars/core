@@ -13,6 +13,7 @@ OSP plugin builds on. OKF v0.1 conformant per SPEC §5.
 - [Calendar handling, and the DJF year-boundary trap](conventions/calendars.md), type: convention, status: verified
 - [Unmasked fill values: the sentinel list and detection recipe](conventions/common-fill-values.md), type: dataset-gotcha, severity high, cross-cutting, status: verified (standing 🟡: eval case pending)
 - [Smell-test anchors: order-of-magnitude sanity ranges](conventions/smell-test-ranges.md), type: convention, status: verified
+- [Observation capture: freezing live data into citable records](conventions/observation-capture.md), type: convention, status: draft
 - [Physical-bounds screening table](conventions/physical-bounds-screening.md), type: convention, status: verified
 - [Satellite QA flag decoding (MODIS, Landsat, Sentinel-2)](conventions/satellite-qa-flag-decoding.md), type: convention, status: verified
 - [Dataset citation and DOI conventions](conventions/dataset-citations.md), type: convention, status: verified

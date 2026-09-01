@@ -2,6 +2,14 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-09-01 · observation-capture convention drafted beside the
+  capture tool (connectors/obs_capture.py): two hashes because live
+  envelopes are volatile while data stands still (demonstrated live:
+  same closed window captured twice, content identical, raw
+  different), retrieval time as part of identity, revision means a
+  new capture never an overwrite, receipts cite capture id and
+  content hash. Draft pending steward review. (drafted by build
+  assistant)
 - 2026-07-06 · steward addition: cf-conventions gains CF packed-data (scale_factor/add_offset) and the license global attribute.
 
 - 2026-07-06 · steward review PASSED: the 5 migration-draft concepts (smell-test-ranges, physical-bounds-screening, satellite-qa-flag-decoding, dataset-citations, hamed-rao-mk-nan) promoted draft to status: verified (verified_by OSP steward review); placeholder evidence replaced with resolving sources (NOAA CPC/NCEI/PSL for indices, published DOIs, TEOS-10, USGS, DataCite, pymannkendall, GRACE JPL, the ECCO variable catalog).
