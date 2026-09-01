@@ -79,3 +79,15 @@ This file deliberately does not restate them.
 
 **Running from a checkout.** `uv run connectors/observations_mcp.py`
 from the repo root; `--selftest` probes all five sources live.
+
+**Version and pin propagation (the runbook).** The server file is the
+unit of review. Its PEP 723 block pins dependency majors, so a launch
+resolves within reviewed bounds; the file's own VERSION constant names
+the contract version and travels in every response as server_version.
+Repositories that run the server from a commit-pinned URL (hydrology,
+ocean-science) update in exactly one way: after a change merges here,
+each repo repoints its `.mcp.json` pin to the new commit in a reviewed
+edit of its own. Nothing else moves a pin. The offline contract tests
+(`--test`, recorded fixtures, run in CI) are the drift alarm: an
+upstream schema change fails the parser contract before it reaches a
+user as a wrong answer.
