@@ -17,8 +17,9 @@ gated step owned by the loader workflows.
    variable, region, period, temporal and spatial resolution, level or
    depth if applicable, latency needs (NRT vs research quality).
    Unstated parameters are recorded as open, not silently defaulted.
-2. **Consult installed knowledge bundles first.** Check dataset concepts
-   for products matching the parameters, and collect their gotchas and
+2. **Consult installed knowledge concepts first**, as the
+   consult-knowledge skill sets out: dataset concepts for products
+   matching the parameters, with their gotchas, validity domains, and
    Uncertainty notes; these travel with the results.
 3. **Search.** When the Earthdata MCP connector is available, query it
    (CMR collection search) with the parsed parameters. When it is not,

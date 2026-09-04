@@ -15,15 +15,13 @@ they are read from the bundle per the standing step below.
 
 ## Consult the bundle for this analysis
 
-Before applying this method to a specific dataset, DISCOVER and consult
-the installed knowledge bundle; do not work from a remembered list of
-rules. Glob and grep `core/knowledge/` (conventions/, gotchas/) for every
-concept touching the products, quantities, and conventions in play
+Before applying this method to a specific dataset, consult installed
+knowledge concepts first, as the consult-knowledge skill sets out, for
+every concept touching the products, quantities, and conventions in play
 (calendars and the DJF year-boundary trap, CF metadata and cell bounds,
-fill-value sentinels), read the matches, restate what each changes about
-the plan before computing, and cite it by path. A concept added or
-corrected since you last ran is found this way, and is never carried as a
-restated fact in this skill.
+fill-value sentinels); restate what each changes about the plan before
+computing, and cite it by path. No rule is carried here as a restated
+fact.
 
 ## Selection
 

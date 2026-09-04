@@ -16,14 +16,10 @@ methods, or citations.
 This skill is a procedure, not a store of dataset facts. Every dataset
 detail the report states (product version, verification date, expected
 range, uncertainty framing, release caveat, convention, or gotcha) is
-discovered in the installed knowledge bundles, not remembered here:
-glob and grep `knowledge/` (core and any domain bundle in play) for the
-concepts touching the datasets, methods, and quantities reported, read
-the matches, restate what each says in the report's own words, and cite
-it by bundle path. A concept added or corrected since you last ran is
-picked up this way. The report carries none of these facts inline; when
-a stated fact has no owning concept, that gap is itself a Quality or
-Provenance note.
+read from a concept, per the consult-knowledge skill, restated in the
+report's own words, and cited by bundle path with its status. The report
+carries none of these facts inline; when a stated fact has no owning
+concept, that gap is itself a Quality or Provenance note.
 
 ## The confirmation gate (hard gate, before anything is written)
 

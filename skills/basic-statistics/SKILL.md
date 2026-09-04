@@ -13,17 +13,14 @@ methods (bootstrap variants, intervals) live in uncertainty-quantification.
 
 ## Consult the bundle
 
-Before running these methods on a real product, DISCOVER and consult the
-installed knowledge bundle rather than working from remembered numbers.
-Glob and grep `knowledge/datasets/`, `knowledge/gotchas/`,
-`knowledge/recipes/`, and `knowledge/conventions/` for concepts touching
-the product, quantity, and method in play (the dataset's own gotchas, the
-calendar conventions, the method failure modes), read the matches, and
-restate and cite what each changes about the plan before computing. This
-file carries the procedure and the refusals only; dataset facts, expected
-numbers, observed failure rates, and gotcha rules live in concepts and are
-read from them per analysis, so a concept added or corrected since you last
-ran changes the behavior without editing this skill.
+Consult installed knowledge concepts first, as the consult-knowledge
+skill sets out: search every installed bundle for the product, quantity,
+and method in play (the dataset's own gotchas, the calendar conventions,
+the method failure modes), read the matches, and restate and cite what
+each changes about the plan before computing. This file carries the
+procedure and the refusals only; dataset facts, expected numbers,
+observed failure rates, and gotcha rules are read from concepts per
+analysis.
 
 ## Climatology and anomalies
 

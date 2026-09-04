@@ -12,19 +12,15 @@ was computed (the code and outputs), not what the prose claims.
 ## Consult the bundle (standing step)
 
 This review carries NO expected numbers, dataset facts, or gotcha rules
-of its own; they live in the knowledge bundle and are read per analysis.
-Before flagging anything numeric or product-specific, DISCOVER and
-consult the applicable concepts: glob and grep the installed
-`knowledge/` directories (core's and the domain plugin's) by quantity,
-product, variable, and topic, read the matches, and restate what each
-one constrains, citing it by path. In particular: the cross-cutting
-sanity anchors live in `conventions/smell-test-ranges.md`; a product's
-native uncertainty or quality layer lives in its dataset concept's
-`## Uncertainty` section; a quantity's expected range lives in its
-domain recipe concept; a trap's rule lives in its gotcha or convention
-concept. A concept added or corrected since you last ran is found this
-way and changes this review without editing this skill. Never work from
-a remembered number where a concept exists.
+of its own. Before flagging anything numeric or product-specific,
+consult installed knowledge concepts first, as the consult-knowledge
+skill sets out, and cite what each match constrains. In particular: the
+cross-cutting sanity anchors live in `conventions/smell-test-ranges.md`;
+a product's native uncertainty or quality layer lives in its dataset
+concept's `## Uncertainty` section; a quantity's expected range lives in
+its domain recipe concept and the computation that recipe cites; a
+trap's rule lives in its gotcha or convention concept. Never work from a
+remembered number where a concept exists.
 
 ## Verdict format
 
