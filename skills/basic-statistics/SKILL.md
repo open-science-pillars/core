@@ -91,8 +91,9 @@ Hamed-Rao variance correction can return a NaN p-value on some series;
 detect it and fall back to `original_test` deliberately, stating the
 fallback, rather than letting NaN cells silently read as non-significant.
 The observed failure rate, the fallback rationale, and the fixture
-verification numbers are not carried here: glob `knowledge/gotchas/` for
-the Hamed-Rao NaN failure-mode concept and cite it. The reasoning that
+verification numbers are not carried here: they are the Hamed-Rao NaN
+failure-mode gotcha's (`knowledge/gotchas/hamed-rao-mk-nan.md`), found
+and cited as the consult-knowledge skill sets out. The reasoning that
 stays is method, not a dataset fact: when a trend is strong relative to
 its autocorrelated noise the uncorrected original test can happen to agree
 with the corrected one, which is exactly the case where the uncorrected
