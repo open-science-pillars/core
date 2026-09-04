@@ -11,17 +11,13 @@ skill's Reproducibility section consumes what this skill prescribes.
 
 ## Consult the bundle, do not restate it
 
-Before prescribing metadata or a citation for an output, DISCOVER and
-read the installed knowledge bundle; do not work from a remembered list
-of attributes or archives. Glob and grep `knowledge/conventions/`,
-`knowledge/gotchas/`, and (for a specific product) its
-`knowledge/datasets/` for the concepts that govern this output's
-metadata contract, its calendar and fill-value handling, and how its
-source archive is cited; read the matches, restate what each requires,
-and cite it by path before writing the file. The CF metadata contract,
-the fill-value and calendar traps, and the per-archive DOI and citation
-practice all live in concepts and are read from them, never carried
-here. A concept added or corrected since you last ran is found this way.
+Before prescribing metadata or a citation for an output, consult
+installed knowledge concepts first, as the consult-knowledge skill sets
+out: the concepts that govern this output's metadata contract, its
+calendar and fill-value handling, and how its source archive is cited
+(the conventions, the gotchas, and the product's own dataset concept).
+Read the matches, restate what each requires, and cite it by path
+before writing the file. None of those facts is carried here.
 
 ## Provenance: history and exact inputs
 

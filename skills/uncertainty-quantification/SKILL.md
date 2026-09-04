@@ -69,17 +69,13 @@ a justification, when r1 is large.
 ## Native product uncertainty fields
 
 **Consult the bundle for this dataset (standing step).** Before
-analyzing any product, DISCOVER its concept in the installed knowledge
-bundles instead of working from a remembered list of which products ship
-which error fields: glob and grep `knowledge/datasets/` (and
-`knowledge/gotchas/`) by product name, read the matching concept's
-`## Uncertainty` section, and restate and cite what it says the
-product's native error fields and their caveats are. That section is the
-single source for whether a product ships an uncertainty field, what it
-captures, and what it omits (including products that ship none, where
-that fact must be stated plainly when quoting their numbers). Do not
-carry those product facts here; a concept added or corrected since you
-last ran is found this way.
+analyzing any product, consult installed knowledge concepts first, as
+the consult-knowledge skill sets out, and read the product's dataset
+concept `## Uncertainty` section: the single source for whether the
+product ships an uncertainty field, what it captures, and what it omits
+(including products that ship none, where that fact is stated plainly
+when quoting their numbers). Restate and cite it; no product fact is
+carried here.
 
 Then apply the invariant method the concept does not restate: use the
 fields, do not just map them, propagate them into the derived quantity.

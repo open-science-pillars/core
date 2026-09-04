@@ -12,12 +12,11 @@ first try, and for diagnosing the openings that fail.
 ## Consult the knowledge bundle; do not carry dataset facts here
 
 Fill-value sentinel lists, calendar and season conventions, and the CF
-metadata contract are dataset knowledge. They live once in the core
-knowledge bundle and are consulted dynamically, never memorized in this
-skill. Before reporting anything that turns on them, discover the
-applicable concepts (glob and grep `core/knowledge/`; the ones this skill
+metadata contract are dataset knowledge, held once in the core bundle
+and never memorized in this skill. Consult installed knowledge concepts
+first, as the consult-knowledge skill sets out; the concepts this skill
 leans on are `conventions/common-fill-values.md`,
-`conventions/calendars.md`, and `conventions/cf-conventions.md`), read
+`conventions/calendars.md`, and `conventions/cf-conventions.md`. Read
 them, restate the relevant point, and cite it. When a concept and this
 skill disagree, the concept wins.
 

@@ -11,13 +11,10 @@ reconstructs the v0.1 enumeration referenced by SPEC §9.
 
 ## Consult the bundle for this dataset
 
-Before reporting any check, DISCOVER and read the applicable knowledge
-concepts; do not carry dataset facts, sentinel lists, screening numbers,
-or QA bit layouts in this skill. Glob and grep `knowledge/` (its
-`conventions/`, `gotchas/`, `datasets/`, and `recipes/`) by the dataset,
-variable, and check in play, read the matches, then restate what each
-changes about the check and cite it by path. The concepts this skill
-leans on:
+Before reporting any check, consult installed knowledge concepts first,
+as the consult-knowledge skill sets out, by the dataset, variable, and
+check in play; this skill carries no dataset facts, sentinel lists,
+screening numbers, or QA bit layouts. The concepts it leans on:
 
 - the sentinel list and detection recipe: `conventions/common-fill-values.md`;
 - the physical-bounds screening table: `conventions/physical-bounds-screening.md`;
@@ -26,8 +23,6 @@ leans on:
 - the dataset's own known-issues / gotcha concepts, for named instrument
   or version transitions.
 
-A concept added or corrected since you last ran is found this way, and
-that is how it changes this skill's behavior without editing the skill.
 Numbers, sentinel values, and bit layouts are read from the concepts,
 never from this file.
 

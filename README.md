@@ -29,6 +29,10 @@ mapping task end to end. Unfamiliar with a term below? See the
   name: *start* (orient in a project), *discover-data* (find a dataset), and
   *report* (write it up). Report enforces the house rule: no headline number
   without an uncertainty statement or an explicit reason there isn't one.
+  One more skill, *consult-knowledge*, states once how every skill and
+  agent reads the installed knowledge bundles before acting on a dataset:
+  where to look, how to cite a match and voice its status, which concept
+  wins when two disagree.
 - **Agents**: a linter that checks the knowledge bundle for problems and a
   seeder that drafts new evidence-linked concepts. Both propose; neither
   merges on its own.
