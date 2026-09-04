@@ -3,12 +3,13 @@ type: convention
 title: "Satellite QA flag decoding: MODIS, Landsat Collection 2, Sentinel-2"
 description: "Bit and class layouts for decoding satellite QA layers: MODIS VI Quality, Landsat C2 QA_PIXEL, Sentinel-2 SCL; used by the QC QA-flag check."
 tags: [qc, qa-flags, modis, landsat, sentinel-2, bitfield]
-timestamp: 2026-07-05
-status: verified
-verified: 2026-07-06
-verified_by: OSP steward review
-evidence:
-  - https://www.usgs.gov/landsat-missions/landsat-collection-2-quality-assessment-bands
+generated: { by: knowledge-seeder/claude, at: 2026-07-05T00:00:00Z }
+status: stable
+verified: { by: human:PaulMRamirez, at: 2026-07-06T00:00:00Z }
+sources:
+  - id: usgs-landsat-c2-qa
+    title: "USGS: Landsat Collection 2 Quality Assessment Bands (QA_PIXEL bit layout)"
+    resource: https://www.usgs.gov/landsat-missions/landsat-collection-2-quality-assessment-bands
 ---
 
 # Satellite QA flag decoding
@@ -25,7 +26,7 @@ quality-control skill); these are the layouts it reads.
   first-pass masking and the bit field for the reasons.
 - **Landsat Collection 2 QA_PIXEL** (16-bit): bit 0 fill, bit 1 dilated
   cloud, bit 3 cloud, bit 4 cloud shadow, bit 5 snow, bit 6 clear, bit 7
-  water; confidence pairs sit in bits 8-15. Mask with
+  water; confidence pairs sit in bits 8-15.[^usgs-landsat-c2-qa] Mask with
   `(qa & (1 << bit)) != 0`.
 - **Sentinel-2 SCL** (scene classification, integer classes, not bits):
   0 no-data, 1 saturated/defective, 3 cloud shadow, 8 cloud medium
@@ -35,3 +36,5 @@ quality-control skill); these are the layouts it reads.
 
 Always state which bits or classes were masked and what fraction of
 pixels that removed.
+
+[^usgs-landsat-c2-qa]: USGS Landsat Collection 2 Quality Assessment Bands, the QA_PIXEL bit definitions.

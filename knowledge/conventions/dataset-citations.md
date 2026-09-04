@@ -3,18 +3,21 @@ type: convention
 title: "Dataset DOIs and citations by archive"
 description: "Where the citable DOI lives per archive and what a complete data citation names: version or processing baseline, DOI, and an access date for records that update in place."
 tags: [citation, doi, provenance, fair, reproducibility]
-timestamp: 2026-07-05
-status: verified
-verified: 2026-07-06
-verified_by: OSP steward review
-evidence:
-  - https://datacite.org/
-  - https://cfconventions.org/cf-conventions/cf-conventions.html
+generated: { by: knowledge-seeder/claude, at: 2026-07-05T00:00:00Z }
+status: stable
+verified: { by: human:PaulMRamirez, at: 2026-07-06T00:00:00Z }
+sources:
+  - id: datacite
+    resource: https://datacite.org/
+    title: "DataCite: DOI registration and citation of research data"
+  - id: cf-conventions
+    resource: https://cfconventions.org/cf-conventions/cf-conventions.html
+    title: "NetCDF Climate and Forecast (CF) Metadata Conventions"
 ---
 
 # Dataset DOIs and citations by archive
 
-Cite the data itself, with version and DOI, not just the paper about it.
+Cite the data itself, with version and DOI, not just the paper about it.[^datacite]
 The archive determines where the citable identifier lives and what a
 complete citation names.
 
@@ -44,3 +47,5 @@ as a whole) and a *version* DOI that resolves to one exact deposit.
 Exact reuse (the case a methods section documents) cites the version
 DOI; confusing the two lets a "reproducible" citation drift to whatever
 was uploaded last.
+
+[^datacite]: DataCite, the DOI infrastructure for data citation and its version-aware citation practice.

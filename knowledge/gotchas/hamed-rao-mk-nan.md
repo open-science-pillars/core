@@ -3,31 +3,36 @@ type: dataset-gotcha
 title: "Hamed-Rao modified Mann-Kendall can return NaN; detect it and fall back to the original test"
 description: "The Hamed-Rao autocorrelation correction occasionally yields a NaN p-value; undetected, those cells read as non-significant and silently blank a trend map."
 tags: [mann-kendall, hamed-rao, autocorrelation, trend, pymannkendall, nan]
-timestamp: 2026-07-05
+generated: { by: knowledge-seeder/claude, at: 2026-07-05T00:00:00Z }
 severity: medium
 scope: cross-cutting
 # Cross-cutting method gotcha: a numerical failure mode of the Hamed-Rao
 # variance correction (pymannkendall), independent of any one dataset, so
 # it states its scope instead of linking a dataset concept (the SPEC §3.6
 # cross-cutting exception, as in common-fill-values.md).
-evidence:
-  - ../../verification/fixtures/make_fixtures.py
-  - https://github.com/mmhs013/pymannkendall
-  - https://doi.org/10.1016/S0022-1694(97)00125-X
-status: verified
-verified: 2026-07-06
-verified_by: OSP steward review
+sources:
+  - id: make-fixtures
+    resource: ../../verification/fixtures/make_fixtures.py
+    title: "make_fixtures.py: the core verification fixture generator (era5like_t2m.nc, imposed 0.20 K/decade trend, AR(1) phi 0.5)"
+  - id: pymannkendall
+    resource: https://github.com/mmhs013/pymannkendall
+    title: "pymannkendall: hamed_rao_modification_test and original_test"
+  - id: hamed-rao-1998
+    resource: https://doi.org/10.1016/S0022-1694(97)00125-X
+    title: "Hamed and Rao 1998, A modified Mann-Kendall trend test for autocorrelated data, Journal of Hydrology 204"
+status: stable
+verified: { by: human:PaulMRamirez, at: 2026-07-06T00:00:00Z }
 ---
 
 # Hamed-Rao modified Mann-Kendall can return NaN; detect it and fall back
 
 **Applicability: cross-cutting.** This is a numerical property of the
-Hamed-Rao variance correction (`pymannkendall.hamed_rao_modification_test`),
+Hamed-Rao variance correction (`pymannkendall.hamed_rao_modification_test`),[^pymannkendall]
 not of any one dataset. It surfaces most often in per-cell trend maps,
 where thousands of independent series are tested.
 
 **Mechanism.** The Hamed-Rao modification rescales the Mann-Kendall
-variance by the series' autocorrelation structure. On some series that
+variance by the series' autocorrelation structure.[^hamed-rao-1998] On some series that
 rescaling is undefined and the test returns a NaN p-value. Observed on
 about 1.5% of grid cells in per-cell map use (core map-mode run,
 2026-07-04); the rate depends on the series length and autocorrelation.
@@ -46,7 +51,7 @@ verdict, so record which cells took it.
 
 **Verification.** On the core verification fixture
 ([make_fixtures.py](../../verification/fixtures/make_fixtures.py),
-era5like_t2m.nc), the Hamed-Rao path recovers the constructed trend
+era5like_t2m.nc),[^make-fixtures] the Hamed-Rao path recovers the constructed trend
 (0.199 vs the imposed 0.20 K/decade, verified 2026-07-04). The fixture's
 AR(1) noise (phi = 0.5 by construction, documented in make_fixtures.py)
 is why the autocorrelation-aware test is the right default there. The
@@ -56,3 +61,7 @@ uncorrected test would build false confidence for weaker real-world
 trends. A dedicated eval for the NaN fallback path is not yet in core's
 evals/; the existing trend-method case checks autocorrelation-awareness
 generally, not this failure mode.
+
+[^pymannkendall]: pymannkendall, the implementation of both tests named here.
+[^hamed-rao-1998]: Hamed and Rao 1998, the variance correction the modified test applies.
+[^make-fixtures]: make_fixtures.py in core's verification fixtures; the constructed series and its AR(1) noise.
