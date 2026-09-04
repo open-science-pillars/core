@@ -3,7 +3,7 @@ type: convention
 title: "Observation capture: freezing live data into citable records"
 description: "Live observation APIs revise, replace, and reprocess; a receipt cannot hash a moving target. A capture freezes one query with two hashes (raw evidence, canonical identity), the retrieval time as part of the record, and the rule that revision means a new capture, never an overwrite."
 tags: [observations, capture, provenance, reproducibility, receipts]
-timestamp: 2026-09-01
+generated: { by: knowledge-seeder/claude, at: 2026-09-01T00:00:00Z }
 status: draft
 ---
 

@@ -3,17 +3,18 @@ type: convention
 title: "Physical-bounds screening table for geophysical QC"
 description: "Hard and plausible screening ranges for common geophysical variables; the QC bounds check reads these, they are screening thresholds not truth."
 tags: [qc, physical-bounds, screening, geophysical]
-timestamp: 2026-07-05
-status: verified
-verified: 2026-07-06
-verified_by: OSP steward review
-evidence:
-  - "internal: climatological screening ranges compiled by the OSP quality-control skill; regional analyses tighten them"
+generated: { by: knowledge-seeder/claude, at: 2026-07-05T00:00:00Z }
+status: stable
+verified: { by: human:PaulMRamirez, at: 2026-07-06T00:00:00Z }
+sources:
+  - id: osp-qc-skill
+    title: "Internal compilation: the climatological screening ranges the OSP quality-control skill applies"
+    resource: "internal: climatological screening ranges compiled by the OSP quality-control skill; regional analyses tighten them"
 ---
 
 # Physical-bounds screening table for geophysical QC
 
-Screening thresholds for the physical-bounds check (QC step 4). Hard
+Screening thresholds for the physical-bounds check (QC step 4).[^osp-qc-skill] Hard
 bounds are physically impossible to exceed; plausible ranges catch
 suspect-but-legal values. Both are screening thresholds, not truth: a
 value inside the bounds is not thereby correct, and a value outside the
@@ -49,3 +50,5 @@ plausible range is listed for review, not auto-rejected.
 Bounds are climatological screening values; regional analyses tighten
 them (a 45 degC 2 m temperature is plausible in the Lut Desert and a
 finding in Finland). State which bounds were applied.
+
+[^osp-qc-skill]: Internal compilation by the OSP quality-control skill; regional analyses tighten these ranges.

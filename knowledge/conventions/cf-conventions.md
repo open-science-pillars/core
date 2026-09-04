@@ -3,10 +3,9 @@ type: convention
 title: CF conventions for analysis outputs
 description: "The CF metadata practice this org's outputs follow: standard names, units, coordinate attributes, grid mappings, history provenance."
 tags: [cf, metadata, netcdf, provenance]
-timestamp: 2026-07-04
-status: verified
-verified: 2026-07-04
-verified_by: OSP steward review
+generated: { by: knowledge-seeder/claude, at: 2026-07-04T00:00:00Z }
+status: stable
+verified: { by: human:PaulMRamirez, at: 2026-07-04T00:00:00Z }
 ---
 
 # CF conventions for analysis outputs

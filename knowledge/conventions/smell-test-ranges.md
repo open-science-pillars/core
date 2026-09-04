@@ -3,17 +3,18 @@ type: convention
 title: "Smell-test anchors: order-of-magnitude sanity ranges for headline earth-science quantities"
 description: "Cross-cutting order-of-magnitude anchors used by the post-computation review: the expected range a headline global quantity should sit near, so an out-of-anchor value is flagged instead of reported."
 tags: [smell-test, sanity-check, expected-range, climatology, review]
-timestamp: 2026-07-05
-status: verified
-verified: 2026-07-06
-verified_by: OSP steward review
-evidence:
-  - "internal: order-of-magnitude anchors compiled by the OSP quality-control and analysis-review skills from standard climatological ranges"
+generated: { by: knowledge-seeder/claude, at: 2026-07-05T00:00:00Z }
+status: stable
+verified: { by: human:PaulMRamirez, at: 2026-07-06T00:00:00Z }
+sources:
+  - id: osp-review-skills
+    title: "Internal compilation: anchors gathered by the OSP quality-control and analysis-review skills from standard climatological ranges"
+    resource: "internal: order-of-magnitude anchors compiled by the OSP quality-control and analysis-review skills from standard climatological ranges"
 ---
 
 # Smell-test anchors: order-of-magnitude sanity ranges for headline earth-science quantities
 
-Order-of-magnitude anchors for the post-computation review. A headline
+Order-of-magnitude anchors for the post-computation review.[^osp-review-skills] A headline
 value outside its anchor is suspect until explained; inside but odd
 warrants a second look. These are cross-cutting reference ranges,
 consulted at review time and cited, never carried inside a skill.
@@ -54,3 +55,5 @@ is K vs C; a factor about 30 on precipitation is mm/day vs mm/month; a
 factor 100 on fractions is percent vs fraction; a factor 1000 on
 transport is TW vs PW. This is a diagnostic technique (invariant,
 universal), recorded here beside the anchors it resolves.
+
+[^osp-review-skills]: Internal compilation by the OSP quality-control and analysis-review skills; the anchors drift with the observing era.

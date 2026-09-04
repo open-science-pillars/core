@@ -2,6 +2,18 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-09-03 · bundle migrated to OKF v0.2 on the steward's instruction:
+  all nine concepts move from timestamp to a generated event, the
+  eight verified ones from status verified with a bare date and a
+  verified_by line to status stable plus a verified event carrying
+  the ORIGINAL review dates (2026-07-04, 2026-07-06); evidence lists
+  become sources with readable ids and titles, joined to the body by
+  footnotes; the root index declares okf_version "0.2". No claim
+  added, reworded or moved, and no verification is new. One source
+  left uncited rather than force-joined: cf-conventions in
+  dataset-citations.md, whose supporting role the body does not
+  state. Checker: 0 errors, 2 warnings (that source; the
+  observation-capture draft's unverified tier) · steward
 - 2026-09-01 · observation-capture convention drafted beside the
   capture tool (connectors/obs_capture.py): two hashes because live
   envelopes are volatile while data stands still (demonstrated live:
