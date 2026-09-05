@@ -41,11 +41,10 @@ Where the record cannot be read (a surface without a shell), search the
 bundles reachable from the running plugin's own root and the local
 config, and say which bundles were searched.
 
-Where a plugin still carries copies of provider concepts under its own
-knowledge/ (a transitional `knowledge/snapshot.yaml` names the copy
-directory), search the copies only when the provider bundle itself is
-not installed; installed, the provider bundle is the same text at a
-release and is the one to cite.
+A skill or agent that names a concept by bundle path
+(`knowledge/podaac/gotchas/<name>.md`) means the concept under that
+path in whichever installed bundle root carries it; resolve the path
+against every root above, and cite the concept as found there.
 
 Under each bundle root, glob the directories that exist:
 
