@@ -109,7 +109,9 @@ and the averaged-over band stated in the title (for example "5S-5N mean").
 
 ## Uncertainty visualization
 
-Per SPEC §3.3, this section is load-bearing, not decoration:
+Per the specification's cartography requirements (docs/SPECIFICATION.md
+in open-science-pillars/marketplace), this section is load-bearing, not
+decoration:
 
 - **Interval bands on time series:** `fill_between` around the line, the
   method and level in the label ("95% CI, block bootstrap"), band drawn

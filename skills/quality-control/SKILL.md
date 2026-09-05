@@ -7,7 +7,9 @@ description: "QC for geophysical data: completeness, physical-bounds checks, fil
 
 Quality control for geophysical datasets: invocable directly ("run QC on
 this dataset") and consulted automatically before analysis. The six-check structure
-reconstructs the v0.1 enumeration referenced by SPEC §9.
+reconstructs the v0.1 enumeration that the specification's acceptance
+criteria reference (docs/SPECIFICATION.md in
+open-science-pillars/marketplace).
 
 ## Consult the bundle for this dataset
 

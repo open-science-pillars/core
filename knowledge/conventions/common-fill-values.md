@@ -7,8 +7,8 @@ generated: { by: knowledge-seeder/claude, at: 2026-07-04T00:00:00Z }
 severity: high
 scope: cross-cutting
 # Cross-cutting gotcha: applies to any gridded or tabular product, so it
-# states its scope instead of linking one dataset concept (the SPEC §3.6
-# exception; see body for applicability).
+# states its scope instead of linking one dataset concept (the
+# specification's cross-cutting exception; see body for applicability).
 eval_case: fill-value-detection
 sources:
   - id: cf-missing-data

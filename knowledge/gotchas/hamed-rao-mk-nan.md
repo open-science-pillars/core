@@ -8,8 +8,8 @@ severity: medium
 scope: cross-cutting
 # Cross-cutting method gotcha: a numerical failure mode of the Hamed-Rao
 # variance correction (pymannkendall), independent of any one dataset, so
-# it states its scope instead of linking a dataset concept (the SPEC §3.6
-# cross-cutting exception, as in common-fill-values.md).
+# it states its scope instead of linking a dataset concept (the
+# specification's cross-cutting exception, as in common-fill-values.md).
 sources:
   - id: make-fixtures
     resource: ../../verification/fixtures/make_fixtures.py

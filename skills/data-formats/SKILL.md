@@ -62,7 +62,7 @@ archive listing before debugging anything else.
 
 Open lazily by default (`chunks={}` engages Dask with on-disk chunking).
 Declare the compute scale rather than assuming a machine: small (laptop),
-medium (Dask cluster), large (HPC or burst) per SPEC §0.4.
+medium (Dask cluster), large (HPC or burst).
 
 ## Fill values and packing
 
