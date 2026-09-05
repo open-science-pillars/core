@@ -101,7 +101,7 @@ gm = ds.weighted(weights).mean(["lat", "lon"])
 - Nothing computes until `.compute()` (returns in-memory result),
   `.persist()` (keeps it on the cluster), or plotting forces it. Check
   `ds.nbytes / 1e9` before computing and state the compute scale: small
-  (laptop), medium (Dask cluster), large (HPC), per SPEC §0.4.
+  (laptop), medium (Dask cluster), large (HPC).
 - `xr.open_mfdataset` parallelizes multi-file opens but silently aligns
   coordinates; pass `combine="by_coords"` and check the result's time
   axis is monotonic with no duplicates.

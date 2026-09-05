@@ -9,7 +9,7 @@
 #     "matplotlib",
 # ]
 # ///
-# Core golden notebook (SPEC v0.5.1 §6): the report skill's
+# Core golden notebook: the report skill's
 # computational substrate, end to end on the synthetic fixture:
 # load -> QC -> anomaly -> Mann-Kendall trend -> figure -> report.
 # Asserts section-complete report content, a knowledge-concept citation,
@@ -45,7 +45,8 @@ def _():
 @app.cell
 def _(HERE, importlib):
     # Fixture: generate deterministically if absent (fixtures are never
-    # committed; make_fixtures.py is the reproducible source, SPEC §6).
+    # committed; make_fixtures.py is the reproducible source, per the
+    # fixtures policy).
     fixture_path = HERE / "fixtures" / "era5like_t2m.nc"
     if not fixture_path.exists():
         spec = importlib.util.spec_from_file_location(

@@ -1,10 +1,11 @@
 # Fixture provenance
 
-Required by SPEC §6: every fixture is recorded here with
-source, version, and license. All fixtures in this directory are synthetic,
-generated deterministically by `make_fixtures.py` (seed 20260704), and the
-generated `.nc` files are never committed (see `.gitignore`); run
-`python make_fixtures.py` to produce them.
+Required by the specification's fixture-provenance rule
+(docs/SPECIFICATION.md in open-science-pillars/marketplace): every fixture
+is recorded here with source, version, and license. All fixtures in this
+directory are synthetic, generated deterministically by `make_fixtures.py`
+(seed 20260704), and the generated `.nc` files are never committed (see
+`.gitignore`); run `python make_fixtures.py` to produce them.
 
 | File | Source | Structure | License |
 |---|---|---|---|
