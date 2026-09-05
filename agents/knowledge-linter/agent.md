@@ -79,11 +79,15 @@ What the checker cannot decide. Numbered so findings can cite them.
    stable concept whose body changed after its last `human:` verified
    event, by the dates in the file or the log: 🟡, a re-sign is owed.
 5. **Eval coverage.** Every `severity: high` gotcha carries an
-   `eval_case` id matching a case in the plugin's `evals/`; absent or
-   dangling 🟡. Then read the case: the prompt must not coach the
-   answer, the expected behavior must turn on the gotcha's mechanism,
-   and `concept_basis` must name the gotcha. A case that would pass
-   without the concept: 🟡, coverage in name only.
+   `eval_case` id matching a case in the home of the plugin's cases:
+   the plugin's `evals/`, or, when the bundle's index names an eval
+   repository as that home (ocean-science names ecco-agent-evals), that
+   repository's `cases/` (a checkout beside the plugin, or the case
+   file fetched from the repository); absent or dangling 🟡. Then read
+   the case: the prompt must not coach the answer, the expected
+   behavior must turn on the gotcha's mechanism, and `concept_basis`
+   must name the gotcha. A case that would pass without the concept:
+   🟡, coverage in name only.
 6. **Locality and upstreaming (SPEC §5.7).** A plugin-local concept
    that is provider material (product identity, versions, native grid,
    variable facts) carries `upstream: pending`; missing 🟡. Any
