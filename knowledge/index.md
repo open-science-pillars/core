@@ -10,10 +10,6 @@ the exact spec text is vendored in marketplace docs/upstream): every
 verified concept carries its steward's verified event with the original
 review date, status stable.
 
-- Snapshot source repository: (none; this is an original bundle)
-- Snapshot source commit: (n/a)
-- Snapshot date: (n/a)
-
 ## conventions
 
 - [CF conventions for analysis outputs](conventions/cf-conventions.md), type: convention, status: stable, verified

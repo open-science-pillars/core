@@ -69,9 +69,9 @@ What the checker cannot decide. Numbered so findings can cite them.
 3. **Reachability.** Every concept file is listed in `index.md` and
    every entry points at an existing file; orphans either way 🔴. The
    index line describes the concept it points at (a one-liner left
-   behind by a rewrite: 🟡). A concept link that leaves its bundle, or
-   a snapshot copy that links outside the copy's scope: 🟡, the link
-   breaks when the copy travels.
+   behind by a rewrite: 🟡). A relative link that leaves its bundle:
+   🟡, the target is another install and the link breaks when the
+   bundle travels; name the concept by bundle path in text instead.
 4. **Staleness sense.** W5 says a sweep is due; you judge whether the
    date was reasonable. No `stale_after` at all: 🟡. A window that does
    not match the product's flux (five years on a product in its first
