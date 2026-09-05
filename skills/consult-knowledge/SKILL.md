@@ -1,6 +1,6 @@
 ---
 name: consult-knowledge
-description: "Consult installed knowledge bundles before acting on a dataset: which concept directories to search, how to cite a match and voice its status, which concept wins on conflict."
+description: "Consult installed knowledge bundles before acting on a dataset: how to find every bundle, which directories to search, how to cite a match and voice its status, which concept wins on conflict."
 user-invocable: false
 ---
 
@@ -17,15 +17,37 @@ verbatim: "Consult installed knowledge concepts first."
 
 ## Where to look
 
-Every installed plugin ships a bundle at `knowledge/` (root index.md and
-log.md, concepts in typed directories). Search all of them: the domain
-plugin's own bundle, core's, and any bundle a project's local config
-names. A plugin that pins a copy of a provider bundle declares the copy
-directory in `knowledge/snapshot.yaml` (`copy_dir`); the copies are
-ordinary concepts and are searched like the rest.
+Bundles arrive as installed plugins. The installer's record of what is
+installed is the list of places to search, never a remembered path and
+never a cache directory walked by hand (a cache keeps superseded
+versions for a while; the record names the live one). Where a shell is
+available, `claude plugin list --json` prints the record: one entry per
+plugin with its `version`, `installPath`, `enabled` flag, and an
+`errors` field when a dependency is missing or out of range. A plugin
+loaded from a directory for development is in the record too, and its
+root counts the same way.
 
-Under each bundle root, and under each copy directory, glob the
-directories that exist:
+A bundle root is a directory holding an `index.md` and `log.md` with
+concepts in typed directories: `<installPath>/knowledge/` when the
+index is there (core, the domain plugins), or each directory one level
+below it that carries its own index (a provider plugin ships one bundle
+per provider: `knowledge/podaac/`, `knowledge/esdis/`). Search every
+root of every enabled plugin, plus any bundle a project's local config
+names. A plugin whose record carries `errors` is disabled by the
+installer; say that its bundle was not searched and quote the error,
+which names the install command that clears it.
+
+Where the record cannot be read (a surface without a shell), search the
+bundles reachable from the running plugin's own root and the local
+config, and say which bundles were searched.
+
+Where a plugin still carries copies of provider concepts under its own
+knowledge/ (a transitional `knowledge/snapshot.yaml` names the copy
+directory), search the copies only when the provider bundle itself is
+not installed; installed, the provider bundle is the same text at a
+release and is the one to cite.
+
+Under each bundle root, glob the directories that exist:
 
 | directory | what it answers |
 |---|---|
@@ -71,11 +93,12 @@ Concept status is `stable` unless the frontmatter says otherwise.
 
 ## Precedence
 
-When two concepts disagree, the canonical provider bundle wins over a
-plugin-local concept (a snapshot copy is the provider's text and ranks
-with it); stable wins over draft; within a tier the later verified event
-wins. Say that they disagree. A concept wins over anything a skill or an
-agent remembers, including this file.
+When two concepts disagree, the provider bundle wins over a plugin-local
+concept (a bundle installed from a provider plugin such as
+`nasa-daac-knowledge` is the provider tier, and a transitional copy of
+its text ranks with it); stable wins over draft; within a tier the
+later verified event wins. Say that they disagree. A concept wins over
+anything a skill or an agent remembers, including this file.
 
 ## When nothing matches
 
