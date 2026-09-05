@@ -12,6 +12,11 @@ claude plugin marketplace add open-science-pillars/marketplace
 claude plugin install core@open-science-pillars
 ```
 
+The domain plugins (ocean-science, hydrology) declare core as a
+dependency, so installing one of them installs core with it; the command
+above is for core on its own. An install stays at the release it was
+installed from: `claude plugin update core@open-science-pillars` moves
+it to the current one, and `claude plugin list` shows what you have.
 Cowork and Claude Science: add the marketplace and install from it.
 
 ## Your first run
@@ -31,8 +36,11 @@ mapping task end to end. Unfamiliar with a term below? See the
   without an uncertainty statement or an explicit reason there isn't one.
   One more skill, *consult-knowledge*, states once how every skill and
   agent reads the installed knowledge bundles before acting on a dataset:
-  where to look, how to cite a match and voice its status, which concept
-  wins when two disagree.
+  how every installed bundle is found (through the installer's record of
+  plugins, so a bundle that arrives as a dependency is read the moment it
+  lands), how to cite a match and voice its status, which concept wins
+  when two disagree. The *start* screen reports each installed plugin's
+  version and its knowledge in numbers, read from disk.
 - **Agents**: a linter that checks the knowledge bundle for problems and a
   seeder that drafts new evidence-linked concepts. Both propose; neither
   merges on its own.
