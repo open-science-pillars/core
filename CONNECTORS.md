@@ -44,11 +44,17 @@ It is read by earthaccess at download time and is never handled by
 this plugin, never sent to the connector above, and never stored in
 this repository in any form.
 
+The USGS Water Data API key (`API_USGS_PAT`) is optional and
+recommended: it is read from the environment by the observations
+server and the capture tool at request time, sent only as a header to
+api.waterdata.usgs.gov, and never written anywhere. The observations
+section below says exactly what happens with and without it.
+
 ## Observations MCP (`observations`)
 
 **What it is.** `.mcp.json` runs `connectors/observations_mcp.py` from
 this plugin over stdio: one thin server exposing five authoritative
-observation sources as tools. USGS NWIS stream gauges, NOAA CO-OPS
+observation sources as tools. USGS Water Data API stream gauges, NOAA CO-OPS
 tide stations, Argo profiling floats (Ifremer ERDDAP), PSMSL
 long-record tide gauges, and PO.DAAC Hydrocron SWOT river series.
 Every tool is a paper-thin translation from parameters to one
@@ -56,9 +62,18 @@ official HTTPS request; no science lives in the server.
 
 **What leaves your machine.** Query parameters only: station, gauge,
 float, and reach identifiers, bounding boxes, and time ranges, sent
-over HTTPS to the agency endpoint named in each tool. Every source is
-anonymous; no credential exists in this process. No file, no local
-path, and no data you hold is ever sent.
+over HTTPS to the agency endpoint named in each tool. One optional
+credential exists. If you set `API_USGS_PAT` in your environment (a
+key from https://api.waterdata.usgs.gov/signup/), the server sends
+its value as an `X-Api-Key` header to api.waterdata.usgs.gov and to
+no other host; the request URL that every response, capture manifest
+and receipt copies never carries it, and the offline and live
+selftests assert that a sentinel key appears in none of them. Unset,
+the USGS requests share the per-address bucket with everything else
+on your machine that calls the same API, and a 429 comes back as a
+structured error naming the variable and the reset window; the server
+never retries against that host. No file, no local path, and no data
+you hold is ever sent.
 
 **What does not go through it.** Archive holdings. ECCO, SWOT, and
 GRACE retrieval happens through earthaccess as always; this server

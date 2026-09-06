@@ -34,6 +34,22 @@ hash of each:
   captures of the same closed window agreed in content and differed
   in raw, which is the two-hash argument in one line.
 
+The canonical extraction is independent of the endpoint that served
+it. For the USGS sources a canonical row is the time as an ISO 8601
+UTC instant or a date, the value as the decimal string the agency
+served, the approval status, the sorted qualifier list, and the site
+as its bare number; envelope, geometry and host are not identity. So
+a content hash survives a change of endpoint while the data stands
+still, which the move from waterservices.usgs.gov to the USGS Water
+Data API made a live question (the 2026 parity comparison of six
+frozen windows found 3167 of 3167 values identical across the two
+services). Captures taken by the tool before that move (tool_version
+0.1.0 in the manifest, a waterservices.usgs.gov request URL, rows of
+time and value only) remain legacy evidence: their raw hash still
+verifies, and their content hash is a legacy identity comparable only
+with other legacy captures, never with a capture of the same window
+taken after the move.
+
 The retrieval timestamp is part of the record, not decoration: for a
 mutable source, "the data as retrieved on this date" is the only
 honest citation, and the access date a methods section needs comes

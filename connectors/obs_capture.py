@@ -27,12 +27,37 @@ and fails loudly on any mismatch. Captures live OUTSIDE the
 repositories; receipts cite capture_id and content_sha256.
 
 Deterministic windows only: a capture of "latest" is refused, because
-an unreproducible query cannot be a citable record.
+an unreproducible query cannot be a citable record. A usgs-iv capture
+given a period (a duration back from now) is resolved to an explicit
+UTC window at capture time and that window is what the manifest
+records; the period form is a convenience, not a reproducible query.
+
+CANONICAL ROWS ARE API INDEPENDENT. For the USGS sources a canonical
+row is the time as an ISO 8601 UTC instant or a date, the value as
+the decimal string the agency served, the approval status and the
+sorted qualifier list, and the site as its bare number; the source
+endpoint, its envelope and its geometry are not part of the identity,
+so a content hash survives a change of endpoint when the data stands
+still. Captures taken before this tool moved to the USGS Water Data
+API (manifest tool_version 0.1.0, a waterservices.usgs.gov request
+URL, rows of t and v only) remain legacy evidence: their raw hash
+still verifies and their content hash is a legacy identity, comparable
+only with other legacy captures.
+
+The USGS key: if API_USGS_PAT is set, it is sent as an X-Api-Key
+header to api.waterdata.usgs.gov only; the request URL the manifest
+records never carries it. Pages (limit 50000, cursor next links) are
+walked under a request budget; a multi-page capture stores the page
+bodies joined by newlines as its raw payload and records the count.
+No retry on a 429 from that host, since a retry spends a second
+request against an hourly bucket.
 
 Usage:
   obs_capture.py capture --source psmsl -p station_id=1
   obs_capture.py capture --source usgs-dv -p sites=01646500 \\
       -p start_date=2024-01-01 -p end_date=2024-03-31
+  obs_capture.py capture --source usgs-iv -p sites=01646500 \\
+      -p start_time=2026-08-01T00:00:00Z -p end_time=2026-08-08T00:00:00Z
   obs_capture.py verify --id <capture_id>
   obs_capture.py list
 Store: --store DIR (default ~/obs-captures), shown on first use.
@@ -43,21 +68,38 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
+import re
 import sys
 import time
 from pathlib import Path
+from urllib.parse import urlparse
 
 import httpx
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 UA = {"User-Agent": f"osp-obs-capture/{VERSION}"}
+USGS_API = "https://api.waterdata.usgs.gov/ogcapi/v0/collections"
+USGS_HOST = "api.waterdata.usgs.gov"
+USGS_KEY_VAR = "API_USGS_PAT"
+USGS_PAGE_LIMIT = 50000
+USGS_PAGE_BUDGET = 4
+
+
+def _headers(url: str) -> dict:
+    h = dict(UA)
+    key = os.environ.get(USGS_KEY_VAR)
+    if key and urlparse(url).netloc == USGS_HOST:
+        h["X-Api-Key"] = key
+    return h
 
 
 def fetch(url: str, params: dict | None = None) -> httpx.Response:
+    host = urlparse(url).netloc
     for attempt in (1, 2):
         try:
-            r = httpx.get(url, params=params, headers=UA, timeout=60.0,
-                          follow_redirects=True)
+            r = httpx.get(url, params=params, headers=_headers(url),
+                          timeout=120.0, follow_redirects=True)
         except httpx.HTTPError as e:
             if attempt == 2:
                 raise SystemExit(f"transport failure: {e!r}")
@@ -65,6 +107,16 @@ def fetch(url: str, params: dict | None = None) -> httpx.Response:
             continue
         if r.status_code < 400:
             return r
+        if r.status_code == 429 and host == USGS_HOST:
+            reset = r.headers.get("Retry-After") or r.headers.get("X-RateLimit-Reset")
+            raise SystemExit(
+                f"HTTP 429 from {USGS_HOST}, not retried (a retry spends a "
+                f"second request against an hourly bucket); reset "
+                f"{reset + ' seconds' if reset else 'within the hour'}; "
+                + ("" if USGS_KEY_VAR in os.environ else
+                   f"set {USGS_KEY_VAR} (a key from https://{USGS_HOST}/signup/, "
+                   "sent only as an X-Api-Key header) for a per-key bucket; ")
+                + f"body: {r.text[:300]}")
         if r.status_code in (429, 500, 502, 503, 504) and attempt == 1:
             time.sleep(2.0)
             continue
@@ -72,28 +124,89 @@ def fetch(url: str, params: dict | None = None) -> httpx.Response:
     raise SystemExit("unreachable")
 
 
+def fetch_pages(url: str, params: dict) -> list[httpx.Response]:
+    """Every page of one Water Data API items query, under the budget."""
+    q = {**params, "limit": USGS_PAGE_LIMIT, "skipGeometry": "true"}
+    out = []
+    for _ in range(USGS_PAGE_BUDGET):
+        r = fetch(url, q)
+        out.append(r)
+        nxt = next((l.get("href") for l in r.json().get("links", [])
+                    if l.get("rel") == "next"), None)
+        if not nxt:
+            return out
+        if urlparse(nxt).netloc != USGS_HOST:
+            raise SystemExit(f"refusing a next link off {USGS_HOST}: {nxt}")
+        url, q = nxt, None
+    raise SystemExit(f"the window holds more than "
+                     f"{USGS_PAGE_BUDGET * USGS_PAGE_LIMIT} rows (the request "
+                     "budget for one capture); narrow the window")
+
+
+_DURATION = re.compile(r"^P(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?)?$")
+
+
+def _resolve_period(period: str) -> tuple[str, str]:
+    m = _DURATION.match(period.strip().upper())
+    if not m or not any(m.groups()):
+        raise SystemExit(f"period {period!r} is not an ISO 8601 duration "
+                         "such as P7D or PT12H")
+    w, d, h, mi = (int(x or 0) for x in m.groups())
+    now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
+    start = now - dt.timedelta(weeks=w, days=d, hours=h, minutes=mi)
+    iso = lambda t: t.isoformat().replace("+00:00", "Z")
+    return iso(start), iso(now)
+
+
 # Each source: (endpoint builder, canonicalizer). Canonical output is
-# rows only, deterministically ordered; envelopes are stripped.
+# rows only, deterministically ordered; envelopes are stripped. A
+# builder returns (url, params); the USGS builders page.
 def _usgs(kind):
     def build(p):
-        base = {"format": "json", "sites": p["sites"],
-                "parameterCd": p.get("parameter_cd", "00060")}
+        ids = ",".join(x if "-" in x else f"USGS-{x}"
+                       for x in (y.strip() for y in p["sites"].split(","))
+                       if x)
+        q = {"monitoring_location_id": ids,
+             "parameter_code": p.get("parameter_cd", "00060")}
         if kind == "iv":
-            base["period"] = p["period"]  # deterministic only if past-anchored; warn below
-            base["siteStatus"] = "all"
-            return "https://waterservices.usgs.gov/nwis/iv/", base
-        base["startDT"], base["endDT"] = p["start_date"], p["end_date"]
-        return "https://waterservices.usgs.gov/nwis/dv/", base
+            if "period" in p and "start_time" not in p:
+                p["start_time"], p["end_time"] = _resolve_period(p["period"])
+                print(f"note: period {p['period']} resolved to "
+                      f"{p['start_time']}/{p['end_time']} (anchored to now; "
+                      "the resolved window is the reproducible query)")
+            q["datetime"] = f"{p['start_time']}/{p['end_time']}"
+            return f"{USGS_API}/continuous/items", q
+        q["datetime"] = f"{p['start_date']}/{p['end_date']}"
+        return f"{USGS_API}/daily/items", q
 
-    def canon(r):
-        out = []
-        for ts in r.json()["value"]["timeSeries"]:
-            out.append({"site": ts["sourceInfo"]["siteCode"][0]["value"],
-                        "parameter": ts["variable"]["variableCode"][0]["value"],
-                        "rows": [{"t": v["dateTime"], "v": v["value"]}
-                                 for v in ts["values"][0]["value"]]})
-        return sorted(out, key=lambda s: (s["site"], s["parameter"]))
+    def canon(pages):
+        groups = {}
+        for r in pages:
+            for f in r.json()["features"]:
+                pr = f["properties"]
+                k = (pr["monitoring_location_id"].split("-", 1)[-1],
+                     pr["parameter_code"], pr["statistic_id"])
+                groups.setdefault(k, []).append(
+                    {"t": _utc(pr["time"]), "v": pr["value"],
+                     "approval": pr.get("approval_status"),
+                     "qualifiers": sorted(pr.get("qualifier") or [])})
+        if not groups:
+            raise SystemExit("no observations returned for that location, "
+                             "parameter and window (the API answers an "
+                             "unknown site or parameter with an empty "
+                             "collection); nothing captured")
+        return [{"site": k[0], "parameter": k[1], "statistic": k[2],
+                 "rows": sorted(v, key=lambda row: row["t"])}
+                for k, v in sorted(groups.items())]
     return build, canon
+
+
+def _utc(t: str) -> str:
+    """A date stays a date; an instant becomes ISO 8601 UTC with Z."""
+    if "T" not in t:
+        return t
+    return (dt.datetime.fromisoformat(t.replace("Z", "+00:00"))
+            .astimezone(dt.timezone.utc).isoformat().replace("+00:00", "Z"))
 
 
 def _coops():
@@ -194,9 +307,14 @@ SOURCES = {
 def do_capture(store: Path, source: str, params: dict) -> dict:
     build, canon = SOURCES[source]
     url, q = build(params)
-    r = fetch(url, q)
-    raw = r.content
-    canonical = canon(r)
+    if source.startswith("usgs-"):
+        pages = fetch_pages(url, q)
+        r, raw = pages[0], b"\n".join(pg.content for pg in pages)
+        canonical = canon(pages)
+    else:
+        r = fetch(url, q)
+        pages, raw = [r], r.content
+        canonical = canon(r)
     cbytes = json.dumps(canonical, sort_keys=True,
                         separators=(",", ":")).encode()
     retrieved = dt.datetime.now(dt.timezone.utc)
@@ -209,6 +327,7 @@ def do_capture(store: Path, source: str, params: dict) -> dict:
     rec = {"capture_id": cid, "source": source,
            "request_url": str(r.request.url), "params": params,
            "retrieved_at": retrieved.isoformat(timespec="seconds"),
+           "pages": len(pages),
            "raw_sha256": hashlib.sha256(raw).hexdigest(),
            "content_sha256": content_sha,
            "rows": sum(len(s["rows"]) for s in nrows) if isinstance(nrows, list)

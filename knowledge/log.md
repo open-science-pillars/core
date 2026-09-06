@@ -2,6 +2,16 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-09-06 · conventions/observation-capture.md (draft): the
+  canonical row is stated as endpoint independent (UTC time or date,
+  decimal-string value, approval status, sorted qualifiers, bare site
+  number) and captures from before the capture tool moved to the USGS
+  Water Data API are named as legacy evidence with a legacy content
+  hash. Beside it, the observations server and the capture tool moved
+  the USGS sources from waterservices.usgs.gov to
+  api.waterdata.usgs.gov (server contract 0.3.0, capture tool 0.2.0);
+  a value-by-value comparison of six frozen windows found no
+  difference. Still a draft pending steward review. (build assistant)
 - 2026-09-03 · bundle migrated to OKF v0.2 on the steward's instruction:
   all nine concepts move from timestamp to a generated event, the
   eight verified ones from status verified with a bare date and a
