@@ -23,9 +23,19 @@ never a cache directory walked by hand (a cache keeps superseded
 versions for a while; the record names the live one). Where a shell is
 available, `claude plugin list --json` prints the record: one entry per
 plugin with its `version`, `installPath`, `enabled` flag, and an
-`errors` field when a dependency is missing or out of range. A plugin
-loaded from a directory for development is in the record too, and its
-root counts the same way.
+`errors` field when a dependency is missing or out of range.
+
+The record is not the whole list. It is written by the installer, so it
+does not know this session: a plugin loaded from a directory for
+development is absent from it, and a plugin the session turned off (or
+on) does not have its `enabled` flag changed to match. So search the
+running skill's own root first, whatever the record says. That root is
+in `${CLAUDE_PLUGIN_ROOT}` for every skill the session loaded, install
+or development directory alike, and it counts as a bundle root; a
+concept the skill names by bundle path resolves there before anywhere
+else. A search that skips it reads a stale installed version of the
+very bundle the session is running, finds the concept missing, and says
+so: the failure looks like a knowledge gap and is not one.
 
 A bundle root is a directory holding an `index.md` and `log.md` with
 concepts in typed directories: `<installPath>/knowledge/` when the
@@ -39,7 +49,10 @@ which names the install command that clears it.
 
 Where the record cannot be read (a surface without a shell), search the
 bundles reachable from the running plugin's own root and the local
-config, and say which bundles were searched.
+config, and say which bundles were searched. Say the same when a
+concept is found under `${CLAUDE_PLUGIN_ROOT}` but not in the record:
+name the version the record lists, so the reader knows the concept is
+newer than the install.
 
 A skill or agent that names a concept by bundle path
 (`knowledge/podaac/gotchas/<name>.md`) means the concept under that
