@@ -6,7 +6,7 @@
 observation sources that compose with the ocean and hydrology
 knowledge work.
 
-  usgs_*       USGS Water Data (NWIS): stream gauges of record
+  usgs_*       USGS Water Data API: stream gauges of record
   coops_*      NOAA CO-OPS: tide and water-level stations of record
   argo_*       Argo profiling floats via the Ifremer ERDDAP
   psmsl_*      PSMSL: the long-record tide-gauge authority
@@ -19,23 +19,36 @@ codes) lives in the connector concepts that cite this file, and
 anything attested happens in sanctioned executors that never call
 this server. Gates never depend on connectors.
 
-RESPONSE CONTRACT (v0.2). Every successful response carries
+RESPONSE CONTRACT (v0.3). Every successful response carries
 retrieval provenance: retrieved_at (UTC), request_url (the resolved
-request), server_version. Truncation keeps the TAIL of a series (the
-recent record), states the total, and names the time span actually
-returned, so a truncated answer can never silently masquerade as the
-whole record; narrow the window or use offset to reach earlier rows.
-Failures return a structured {"error", "source", "status", "detail"}
-with the agency's own message in detail, never a bare exception, so
-"no data for that parameter" is never misreported as "the agency is
-down". One bounded retry with backoff on 429 and 5xx; a minimum
-interval per host keeps the client polite.
+request, never a credential), server_version. Truncation keeps the
+TAIL of a series (the recent record), states the total, and names the
+time span actually returned, so a truncated answer can never silently
+masquerade as the whole record; narrow the time window to reach
+earlier rows. Failures return a structured {"error", "source",
+"status", "detail"} with the agency's own message in detail, never a
+bare exception, so "no data for that parameter" is never misreported
+as "the agency is down". One bounded retry with backoff on 429 and
+5xx, except on api.waterdata.usgs.gov, where a retry would spend a
+second request against an hourly bucket; a minimum interval per host
+keeps the client polite.
+
+USGS PAGING. The Water Data API serves pages (limit 50000 at most)
+with a cursor next link and no matched-row count, and a sorted
+request cannot be paged. The usgs tools therefore fetch unsorted at
+the page limit without geometry, follow next links under a request
+budget, sort locally, and count what they walked: total_rows is a
+walked count, never an estimate. When a next link remains after the
+budget the tool returns a structured error naming the budget rather
+than a silent head.
 
 WHAT LEAVES YOUR MACHINE. Query parameters only (station and float
 identifiers, bounding boxes, time ranges), sent over HTTPS to the
-agency endpoints named per tool. Every source here is anonymous; no
-credential exists in this process. No file, no local path, and no
-data you hold is ever sent.
+agency endpoints named per tool. One optional credential exists: if
+API_USGS_PAT is set in the environment, its value is sent as an
+X-Api-Key header to api.waterdata.usgs.gov only, and to no other host;
+it never appears in a request URL, a response, or an error. No file,
+no local path, and no data you hold is ever sent.
 
 Run: uv run observations_mcp.py            (stdio MCP server)
      uv run observations_mcp.py --selftest (live probes + regressions)
@@ -46,6 +59,8 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import os
+import re
 import sys
 import time
 from functools import wraps
@@ -55,10 +70,15 @@ from urllib.parse import quote, urlparse
 import httpx
 from mcp.server.mcpserver import MCPServer
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 UA = {"User-Agent": f"osp-observations-mcp/{VERSION}"}
 MAX_ROWS = 500
 MIN_INTERVAL_S = 0.5
+USGS_API = "https://api.waterdata.usgs.gov/ogcapi/v0/collections"
+USGS_HOST = "api.waterdata.usgs.gov"
+USGS_KEY_VAR = "API_USGS_PAT"
+USGS_PAGE_LIMIT = 50000   # the API's maximum page size
+USGS_PAGE_BUDGET = 4      # requests one tool call may spend on next links
 FIXTURES = Path(__file__).parent / "fixtures"
 mcp = MCPServer("observations")
 _last_call: dict[str, float] = {}
@@ -70,6 +90,16 @@ class SourceError(Exception):
         super().__init__(detail)
 
 
+def _headers(url: str) -> dict:
+    """The user agent, plus the USGS key as a header on the USGS host
+    only; the key is read from the environment at request time."""
+    h = dict(UA)
+    key = os.environ.get(USGS_KEY_VAR)
+    if key and urlparse(url).netloc == USGS_HOST:
+        h["X-Api-Key"] = key
+    return h
+
+
 def _fetch(source: str, url: str, params: dict | None = None) -> httpx.Response:
     host = urlparse(url).netloc
     wait = MIN_INTERVAL_S - (time.monotonic() - _last_call.get(host, 0.0))
@@ -79,20 +109,39 @@ def _fetch(source: str, url: str, params: dict | None = None) -> httpx.Response:
     for attempt in (1, 2):
         _last_call[host] = time.monotonic()
         try:
-            r = httpx.get(url, params=params, headers=UA, timeout=30.0,
-                          follow_redirects=True)
+            r = httpx.get(url, params=params, headers=_headers(url),
+                          timeout=60.0, follow_redirects=True)
         except httpx.HTTPError as e:
             last = SourceError(source, None, f"transport failure: {e!r}")
             time.sleep(2.0)
             continue
         if r.status_code < 400:
             return r
+        if r.status_code == 429 and host == USGS_HOST:
+            raise SourceError(source, 429, _usgs_429_detail(r))
         last = SourceError(source, r.status_code, r.text[:500])
         if r.status_code in (429, 500, 502, 503, 504) and attempt == 1:
             time.sleep(2.0)
             continue
         break
     raise last
+
+
+def _usgs_429_detail(r: httpx.Response) -> str:
+    """No retry on this host: name the variable and the reset window."""
+    reset = r.headers.get("Retry-After") or r.headers.get("X-RateLimit-Reset")
+    limits = {k: v for k, v in r.headers.items()
+              if "ratelimit" in k.lower() or k.lower() == "retry-after"}
+    keyed = USGS_KEY_VAR in os.environ
+    return (f"rate limited by {USGS_HOST} ({'keyed' if keyed else 'unkeyed'} "
+            f"bucket); not retried because a retry spends a second request "
+            f"against an hourly bucket. Reset: "
+            f"{reset + ' seconds' if reset else 'the current hour'}. "
+            + ("" if keyed else
+               f"Set {USGS_KEY_VAR} to a key from https://{USGS_HOST}/signup/ "
+               "to use a per-key bucket; it is sent only as an X-Api-Key "
+               "header. ")
+            + f"Headers: {json.dumps(limits)}. Body: {r.text[:300]}")
 
 
 def _meta(r: httpx.Response) -> dict:
@@ -140,18 +189,38 @@ def _cap(rows: list, tkey=None) -> dict:
 
 
 # ------------------------------------------------------------- parsers
-def parse_usgs(j: dict) -> dict:
+def parse_usgs(pages: list[dict]) -> dict:
+    """Group Water Data API features (daily or continuous) into one
+    series per location, parameter and statistic; rows carry the
+    approval status and the qualifier list the API splits the legacy
+    qualifier column into."""
+    groups: dict[tuple, dict] = {}
+    for page in pages:
+        for f in page["features"]:
+            p = f["properties"]
+            k = (p["monitoring_location_id"], p["parameter_code"],
+                 p["statistic_id"], p["time_series_id"])
+            g = groups.setdefault(k, {
+                "site": p["monitoring_location_id"].split("-", 1)[-1],
+                "location_id": p["monitoring_location_id"],
+                "parameter": p["parameter_code"],
+                "statistic_id": p["statistic_id"],
+                "unit": p.get("unit_of_measure"),
+                "time_series_id": p["time_series_id"], "rows": []})
+            g["rows"].append({"t": p["time"], "v": p["value"],
+                              "approval": p.get("approval_status"),
+                              "qualifiers": sorted(p.get("qualifier") or [])})
     out = []
-    for ts in j["value"]["timeSeries"]:
-        vals = [{"t": v["dateTime"], "v": v["value"]}
-                for v in ts["values"][0]["value"]]
-        out.append({"site": ts["sourceInfo"]["siteCode"][0]["value"],
-                    "name": ts["sourceInfo"]["siteName"],
-                    "parameter": ts["variable"]["variableName"],
-                    **_cap(vals, tkey=lambda r: r["t"])})
+    for k in sorted(groups):
+        g = groups[k]
+        rows = sorted(g.pop("rows"), key=lambda r: r["t"])
+        out.append({**g, **_cap(rows, tkey=lambda r: r["t"])})
     if not out:
-        raise ValueError("no time series in response; check the site "
-                         "number and parameter code")
+        raise SourceError("usgs", 200, "no observations returned for that "
+                          "location, parameter and window (the API answers "
+                          "an unknown site or parameter with an empty "
+                          "collection, not an error); check the site "
+                          "number and parameter code")
     return {"series": out}
 
 
@@ -196,39 +265,102 @@ def parse_hydrocron(j: dict) -> dict:
 
 
 # ---------------------------------------------------------------- USGS
+def _usgs_locations(sites: str) -> str:
+    """Bare site numbers become the API's prefixed location ids."""
+    ids = []
+    for s in sites.split(","):
+        s = s.strip()
+        if s:
+            ids.append(s if "-" in s else f"USGS-{s}")
+    if not ids:
+        raise SourceError("usgs", None, "sites is empty")
+    return ",".join(ids)
+
+
+_DURATION = re.compile(r"^P(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?)?$")
+
+
+def _period_start(period: str, now: dt.datetime | None = None) -> str:
+    """ISO 8601 duration (PnW, PnD, PTnH, PTnM and combinations) back
+    from now, as a UTC instant for the datetime filter."""
+    m = _DURATION.match(period.strip().upper())
+    if not m or not any(m.groups()):
+        raise SourceError("usgs", None, f"period {period!r} is not an ISO "
+                          "8601 duration such as P7D, P2W or PT12H")
+    w, d, h, mi = (int(x or 0) for x in m.groups())
+    now = now or dt.datetime.now(dt.timezone.utc)
+    start = now - dt.timedelta(weeks=w, days=d, hours=h, minutes=mi)
+    return start.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _usgs_walk(collection: str, params: dict, fetch=_fetch) -> tuple[list[dict], httpx.Response]:
+    """Fetch every page of one items query under the request budget.
+    Returns the pages and the first response (whose URL is the
+    request of record)."""
+    url = f"{USGS_API}/{collection}/items"
+    q = {**params, "limit": USGS_PAGE_LIMIT, "skipGeometry": "true"}
+    pages, first = [], None
+    for n in range(USGS_PAGE_BUDGET):
+        r = fetch("usgs", url, q)
+        first = first or r
+        page = r.json()
+        pages.append(page)
+        nxt = next((l.get("href") for l in page.get("links", [])
+                    if l.get("rel") == "next"), None)
+        if not nxt:
+            return pages, first
+        if urlparse(nxt).netloc != USGS_HOST:
+            raise SourceError("usgs", None, f"refusing a next link off "
+                              f"{USGS_HOST}: {nxt}")
+        url, q = nxt, None
+    raise SourceError(
+        "usgs", None,
+        f"the window holds more than {USGS_PAGE_BUDGET * USGS_PAGE_LIMIT} "
+        f"rows ({USGS_PAGE_BUDGET} pages of {USGS_PAGE_LIMIT}, the request "
+        "budget for one call); narrow the time window or ask for fewer "
+        "sites")
+
+
 @mcp.tool()
 @guarded("usgs")
 def usgs_instantaneous(sites: str, parameter_cd: str = "00060",
                        period: str = "P7D") -> dict:
-    """Instantaneous values from USGS NWIS stream gauges.
+    """Continuous (instantaneous) values from USGS stream gauges.
 
     sites: comma-separated USGS site numbers (e.g. '01646500').
     parameter_cd: USGS parameter code; 00060 discharge cfs, 00065 gage
     height ft, 00010 water temperature C.
-    period: ISO 8601 duration back from now (e.g. 'P7D').
-    Source of record: waterservices.usgs.gov (anonymous)."""
-    r = _fetch("usgs", "https://waterservices.usgs.gov/nwis/iv/",
-               {"format": "json", "sites": sites,
-                "parameterCd": parameter_cd, "period": period,
-                "siteStatus": "all"})
-    return {**parse_usgs(r.json()), **_meta(r)}
+    period: ISO 8601 duration back from now (e.g. 'P7D'). Times are
+    UTC; each row carries approval (Approved or Provisional) and the
+    qualifier list (e.g. ESTIMATED, ICE). The continuous collection
+    serves roughly the most recent year; the connector concept in the
+    hydrology bundle keeps that fact dated.
+    Source of record: api.waterdata.usgs.gov, collection continuous."""
+    pages, r = _usgs_walk("continuous", {
+        "monitoring_location_id": _usgs_locations(sites),
+        "parameter_code": parameter_cd,
+        "datetime": f"{_period_start(period)}/.."})
+    return {**parse_usgs(pages), **_meta(r)}
 
 
 @mcp.tool()
 @guarded("usgs")
 def usgs_daily(sites: str, parameter_cd: str = "00060",
                start_date: str = "", end_date: str = "") -> dict:
-    """Daily values from USGS NWIS (statistics, typically the mean).
+    """Daily values from USGS stream gauges (daily statistics,
+    typically the mean, statistic_id 00003).
 
-    start_date, end_date: YYYY-MM-DD. Same site and parameter codes as
-    usgs_instantaneous. Source of record: waterservices.usgs.gov."""
-    p = {"format": "json", "sites": sites, "parameterCd": parameter_cd}
-    if start_date:
-        p["startDT"] = start_date
-    if end_date:
-        p["endDT"] = end_date
-    r = _fetch("usgs", "https://waterservices.usgs.gov/nwis/dv/", p)
-    return {**parse_usgs(r.json()), **_meta(r)}
+    start_date, end_date: YYYY-MM-DD, either side open when empty
+    (both empty fetches the whole daily record and returns its tail).
+    Same site and parameter codes as usgs_instantaneous; rows carry
+    approval and qualifiers the same way.
+    Source of record: api.waterdata.usgs.gov, collection daily."""
+    p = {"monitoring_location_id": _usgs_locations(sites),
+         "parameter_code": parameter_cd}
+    if start_date or end_date:
+        p["datetime"] = f"{start_date or '..'}/{end_date or '..'}"
+    pages, r = _usgs_walk("daily", p)
+    return {**parse_usgs(pages), **_meta(r)}
 
 
 # --------------------------------------------------------------- CO-OPS
@@ -278,7 +410,7 @@ def argo_search(lat_min: float, lat_max: float, lon_min: float,
 
     time_min, time_max: ISO 8601 (e.g. '2026-08-20T00:00:00Z').
     Returns float ids with profile positions and times, from the
-    Ifremer ERDDAP serving the Argo GDAC (anonymous)."""
+    Ifremer ERDDAP serving the Argo GDAC; no credential is sent."""
     cons = [f"time>={time_min}", f"latitude>={lat_min}",
             f"latitude<={lat_max}", f"longitude>={lon_min}",
             f"longitude<={lon_max}"]
@@ -335,8 +467,8 @@ def hydrocron_timeseries(feature_id: str, feature: str = "Reach",
     feature: 'Reach' or 'Node'; feature_id: SWORD id (e.g.
     '63470800171'). fields: comma list; wse is water surface elevation
     in metres (EGM2008 geoid), width in metres. Fill values are large
-    negatives; filter before use. Source: PO.DAAC Hydrocron
-    (anonymous)."""
+    negatives; filter before use. Source: PO.DAAC Hydrocron; no
+    credential is sent."""
     r = _fetch("hydrocron",
                "https://soto.podaac.earthdatacloud.nasa.gov/hydrocron/v1/"
                "timeseries",
@@ -348,13 +480,32 @@ def hydrocron_timeseries(feature_id: str, feature: str = "Reach",
 
 
 # ---------------------------------------------------------- test modes
+_USGS_FIXTURE_Q = {"monitoring_location_id": "USGS-09380000",
+                   "parameter_code": "00060",
+                   "datetime": "2023-01-01/2023-12-31",
+                   "limit": 200, "skipGeometry": "true"}
+
+
 def record_fixtures() -> int:
     FIXTURES.mkdir(exist_ok=True)
+
+    def usgs_pages() -> str:
+        # Two real pages of one daily year at a small page size, so the
+        # offline test walks a genuine cursor next link.
+        pages = []
+        r = _fetch("usgs", f"{USGS_API}/daily/items", _USGS_FIXTURE_Q)
+        pages.append(r.json())
+        nxt = next(l["href"] for l in pages[0]["links"] if l["rel"] == "next")
+        pages.append(_fetch("usgs", nxt).json())
+        return json.dumps({"first_url": str(r.request.url), "pages": pages})
+
     jobs = {
-        "usgs_iv.json": lambda: _fetch(
-            "usgs", "https://waterservices.usgs.gov/nwis/iv/",
-            {"format": "json", "sites": "01646500", "parameterCd": "00060",
-             "period": "P1D", "siteStatus": "all"}).text,
+        "usgs_daily_pages.json": usgs_pages,
+        "usgs_continuous.json": lambda: _fetch(
+            "usgs", f"{USGS_API}/continuous/items",
+            {"monitoring_location_id": "USGS-09380000",
+             "parameter_code": "00060", "limit": 20,
+             "skipGeometry": "true"}).text,
         "coops_latest.json": lambda: _fetch(
             "coops", "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter",
             {"station": "8443970", "product": "water_level", "datum": "MLLW",
@@ -379,15 +530,37 @@ def record_fixtures() -> int:
              "end_time": "2024-03-29T00:00:00Z",
              "fields": "reach_id,time_str,wse,width"}).text,
     }
+    only = [a for a in sys.argv[2:] if not a.startswith("-")]
     for name, fn in jobs.items():
+        if only and name not in only:
+            continue
         (FIXTURES / name).write_text(fn())
         print(f"recorded {name}")
     return 0
 
 
+class _FixtureFetch:
+    """Serves the recorded pages by URL and records what was sent, so
+    the walker and the key handling are tested without the network."""
+
+    def __init__(self, fx: dict):
+        self.pages = {fx["first_url"]: fx["pages"][0]}
+        nxt = next(l["href"] for l in fx["pages"][0]["links"] if l["rel"] == "next")
+        self.pages[nxt] = fx["pages"][1]
+        self.first_url = fx["first_url"]
+        self.calls: list[tuple[str, dict]] = []
+
+    def __call__(self, source, url, params=None):
+        self.calls.append((url, _headers(url)))
+        key = self.first_url if params else url
+        req = httpx.Request("GET", key)
+        return httpx.Response(200, json=self.pages[key], request=req)
+
+
 def offline_test() -> int:
-    """Contract tests: every parser against its recorded fixture, plus
-    the truncation regression that keeps the tail."""
+    """Contract tests: every parser against its recorded fixture, the
+    truncation regression that keeps the tail, the two-page USGS walk,
+    and the rule that the USGS key travels only as a header."""
     fails = 0
 
     def check(name, cond):
@@ -395,11 +568,54 @@ def offline_test() -> int:
         print(f"{'PASS' if cond else 'FAIL'} {name}")
         fails += 0 if cond else 1
 
-    j = json.loads((FIXTURES / "usgs_iv.json").read_text())
-    u = parse_usgs(j)
-    check("usgs parser", u["series"][0]["site"] == "01646500"
-          and u["series"][0]["total_rows"] > 0
-          and "returned_span" in u["series"][0])
+    fx = json.loads((FIXTURES / "usgs_daily_pages.json").read_text())
+    u = parse_usgs(fx["pages"])
+    s = u["series"][0]
+    check("usgs parser groups, sorts and caps",
+          s["site"] == "09380000" and s["location_id"] == "USGS-09380000"
+          and s["statistic_id"] == "00003" and s["total_rows"] == 365
+          and s["rows"][0]["t"] == "2023-01-01"
+          and s["rows"][-1]["t"] == "2023-12-31"
+          and s["rows"][0]["approval"] == "Approved"
+          and isinstance(s["rows"][0]["qualifiers"], list)
+          and s["returned_span"] == ["2023-01-01", "2023-12-31"])
+    ff = _FixtureFetch(fx)
+    pages, first = _usgs_walk("daily", dict(_USGS_FIXTURE_Q), fetch=ff)
+    check("usgs walker follows the cursor next link to the last page",
+          len(pages) == 2 and len(ff.calls) == 2
+          and sum(len(p["features"]) for p in pages) == 365
+          and first.request.url == httpx.URL(fx["first_url"]))
+    saved = os.environ.get(USGS_KEY_VAR)
+    os.environ[USGS_KEY_VAR] = "SENTINEL-not-a-key-0000"
+    try:
+        ff2 = _FixtureFetch(fx)
+        pages, first = _usgs_walk("daily", dict(_USGS_FIXTURE_Q), fetch=ff2)
+        out = json.dumps({**parse_usgs(pages), **_meta(first)})
+        check("usgs key is a header on the USGS host only, never in a "
+              "URL or response",
+              all(h.get("X-Api-Key") == "SENTINEL-not-a-key-0000"
+                  for _, h in ff2.calls)
+              and "SENTINEL" not in out
+              and "X-Api-Key" not in _headers("https://psmsl.org/x"))
+    finally:
+        if saved is None:
+            del os.environ[USGS_KEY_VAR]
+        else:
+            os.environ[USGS_KEY_VAR] = saved
+    c = json.loads((FIXTURES / "usgs_continuous.json").read_text())
+    s = parse_usgs([c])["series"][0]
+    check("usgs continuous rows are UTC instants with approval",
+          s["statistic_id"] == "00011" and s["rows"][0]["t"].endswith("+00:00")
+          and s["rows"][0]["approval"] in ("Approved", "Provisional"))
+    check("usgs empty collection is a structured source error",
+          "error" in guarded("usgs")(lambda: parse_usgs(
+              [{"features": []}]))()
+          and "no observations" in guarded("usgs")(lambda: parse_usgs(
+              [{"features": []}]))()["detail"])
+    check("usgs period parses to a UTC start",
+          _period_start("P7D", dt.datetime(2026, 1, 8, tzinfo=dt.timezone.utc))
+          == "2026-01-01T00:00:00Z"
+          and "error" in guarded("usgs")(lambda: _period_start("7 days"))())
     j = json.loads((FIXTURES / "coops_latest.json").read_text())
     c = parse_coops(j, "water_level")
     check("coops parser", c["total_rows"] == 1 and c["metadata"]["id"] == "8443970")
@@ -419,14 +635,62 @@ def offline_test() -> int:
           and _cap(list(range(1000)))["rows"][0] == 500)
     check("guarded returns structure, never raises",
           "error" in guarded("t")(lambda: (_ for _ in ()).throw(KeyError("x")))())
-    print(f"offline test: {7 - fails}/7 PASS")
+    n = 12
+    print(f"offline test: {n - fails}/{n} PASS")
     return fails
 
 
 def selftest() -> int:
+    global USGS_PAGE_LIMIT
+
+    def usgs_multipage():
+        # A real two-page walk at a small page size (the live cursor
+        # link), then the page size goes back to the API maximum.
+        global USGS_PAGE_LIMIT
+        USGS_PAGE_LIMIT = 200
+        try:
+            d = usgs_daily("09380000", start_date="2023-01-01",
+                           end_date="2023-12-31")
+        finally:
+            USGS_PAGE_LIMIT = 50000
+        s = d["series"][0]
+        return (s["total_rows"] == 365 and s["rows"][-1]["t"] == "2023-12-31"
+                and "limit=200" in d["request_url"])
+
+    def usgs_sentinel():
+        # A sentinel key is refused by the API; the refusal is a
+        # structured error and the sentinel appears nowhere in it.
+        saved = os.environ.get(USGS_KEY_VAR)
+        os.environ[USGS_KEY_VAR] = "SENTINEL-not-a-key-0000"
+        try:
+            d = usgs_daily("09380000", start_date="2023-01-01",
+                           end_date="2023-01-02")
+        finally:
+            if saved is None:
+                del os.environ[USGS_KEY_VAR]
+            else:
+                os.environ[USGS_KEY_VAR] = saved
+        return ("error" in d and d["status"] == 403
+                and "SENTINEL" not in json.dumps(d))
+
+    def usgs_real_key_absent():
+        # With the user's real key set, its value is in no response.
+        key = os.environ.get(USGS_KEY_VAR)
+        if not key:
+            print(f"     ({USGS_KEY_VAR} not set; keyed path not exercised)")
+            return True
+        d = usgs_instantaneous("09380000", period="P1D")
+        return "series" in d and key not in json.dumps(d)
+
     checks = [
-        ("usgs_instantaneous", lambda: usgs_instantaneous(
-            "01646500", period="P1D")["series"][0]["total_rows"] > 0),
+        ("usgs_instantaneous", lambda: (
+            lambda d: d["series"][0]["total_rows"] > 0
+            and d["series"][0]["rows"][-1]["approval"] in ("Approved", "Provisional")
+            and d["series"][0]["rows"][-1]["t"].endswith("+00:00"))(
+                usgs_instantaneous("01646500", period="P1D"))),
+        ("usgs_daily multi-page walk", usgs_multipage),
+        ("usgs sentinel key: refused, never echoed", usgs_sentinel),
+        ("usgs real key never in a response", usgs_real_key_absent),
         ("coops_data", lambda: coops_data(
             "8443970", latest=True)["total_rows"] == 1),
         ("argo_search", lambda: argo_search(
@@ -439,8 +703,8 @@ def selftest() -> int:
             end_time="2024-03-29T00:00:00Z")["total_rows"] > 0),
         ("structured error, no misdiagnosis", lambda: (
             lambda d: "error" in d and d["source"] == "usgs"
-            and "detail" in d)(usgs_instantaneous("01646500",
-                                                  parameter_cd="99999"))),
+            and "no observations" in d["detail"])(
+                usgs_instantaneous("01646500", parameter_cd="99999"))),
     ]
     failures = 0
     for name, fn in checks:
