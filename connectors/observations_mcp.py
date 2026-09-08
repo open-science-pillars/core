@@ -10,7 +10,8 @@ knowledge work.
   coops_*      NOAA CO-OPS: tide and water-level stations of record
   argo_*       Argo profiling floats via the Ifremer ERDDAP
   psmsl_*      PSMSL: the long-record tide-gauge authority
-  hydrocron_*  PO.DAAC Hydrocron: SWOT river reach and node series
+  hydrocron_*  PO.DAAC Hydrocron: SWOT river and lake series, with
+               the product collection named rather than defaulted
 
 DESIGN. Every tool is a paper-thin translation from parameters to one
 official HTTPS request and a trimmed response. No science lives here:
@@ -19,9 +20,12 @@ codes) lives in the connector concepts that cite this file, and
 anything attested happens in sanctioned executors that never call
 this server. Gates never depend on connectors.
 
-RESPONSE CONTRACT (v0.3). Every successful response carries
+RESPONSE CONTRACT (v0.4). Every successful response carries
 retrieval provenance: retrieved_at (UTC), request_url (the resolved
-request, never a credential), server_version. Truncation keeps the
+request, never a credential), server_version. Where a source serves
+more than one product collection, the response also carries the
+collection that answered and who named it, because a series whose
+version is not recorded cannot be joined to another one safely. Truncation keeps the
 TAIL of a series (the recent record), states the total, and names the
 time span actually returned, so a truncated answer can never silently
 masquerade as the whole record; narrow the time window to reach
@@ -70,7 +74,7 @@ from urllib.parse import quote, urlparse
 import httpx
 from mcp.server.mcpserver import MCPServer
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 UA = {"User-Agent": f"osp-observations-mcp/{VERSION}"}
 MAX_ROWS = 500
 MIN_INTERVAL_S = 0.5
@@ -456,26 +460,66 @@ def psmsl_monthly(station_id: int) -> dict:
 
 
 # ------------------------------------------------------------ Hydrocron
+# The collections Hydrocron serves, and the one this tool names for each
+# feature when the caller does not choose. Naming one is not a style
+# preference: the service picks a collection when the request omits it,
+# that default has moved between product versions, and the versions
+# differ by metres on the same reach while sharing no timestamps, so a
+# series assembled across a change of default carries a step that cannot
+# be found by joining on time. The list is the service's own, from the
+# error it returns for a name it does not know.
+HYDROCRON_COLLECTIONS = (
+    "SWOT_L2_HR_RiverSP_2.0", "SWOT_L2_HR_RiverSP_reach_2.0",
+    "SWOT_L2_HR_RiverSP_node_2.0", "SWOT_L2_HR_LakeSP_2.0",
+    "SWOT_L2_HR_LakeSP_prior_2.0", "SWOT_L2_HR_RiverSP_D",
+    "SWOT_L2_HR_RiverSP_reach_D", "SWOT_L2_HR_RiverSP_node_D",
+    "SWOT_L2_HR_LakeSP_D", "SWOT_L2_HR_LakeSP_prior_D",
+)
+HYDROCRON_DEFAULT_COLLECTION = {
+    "Reach": "SWOT_L2_HR_RiverSP_reach_D",
+    "Node": "SWOT_L2_HR_RiverSP_node_D",
+    "PriorLake": "SWOT_L2_HR_LakeSP_prior_D",
+}
+
+
 @mcp.tool()
 @guarded("hydrocron")
 def hydrocron_timeseries(feature_id: str, feature: str = "Reach",
                          start_time: str = "2023-01-01T00:00:00Z",
                          end_time: str = "2026-12-31T00:00:00Z",
-                         fields: str = "reach_id,time_str,wse,width") -> dict:
-    """SWOT river time series from PO.DAAC Hydrocron.
+                         fields: str = "reach_id,time_str,wse,width",
+                         collection_name: str = "") -> dict:
+    """SWOT river and lake time series from PO.DAAC Hydrocron.
 
-    feature: 'Reach' or 'Node'; feature_id: SWORD id (e.g.
+    feature: 'Reach', 'Node' or 'PriorLake'; feature_id: SWORD id (e.g.
     '63470800171'). fields: comma list; wse is water surface elevation
     in metres (EGM2008 geoid), width in metres. Fill values are large
-    negatives; filter before use. Source: PO.DAAC Hydrocron; no
-    credential is sent."""
+    negatives; filter before use.
+
+    collection_name: the product collection to read. Left empty, this
+    tool names the current D-family collection for the feature rather
+    than letting the service choose, and the name it used is returned
+    so a receipt can record it. Pass one of HYDROCRON_COLLECTIONS to
+    read another; an unknown name is refused here rather than sent.
+    Source: PO.DAAC Hydrocron; no credential is sent."""
+    if collection_name and collection_name not in HYDROCRON_COLLECTIONS:
+        raise ValueError(
+            f"unknown collection {collection_name!r}; Hydrocron serves "
+            f"{', '.join(HYDROCRON_COLLECTIONS)}")
+    chosen = collection_name or HYDROCRON_DEFAULT_COLLECTION.get(feature)
+    if not chosen:
+        raise ValueError(
+            f"no default collection for feature {feature!r}; pass collection_name, "
+            f"or use one of {', '.join(sorted(HYDROCRON_DEFAULT_COLLECTION))}")
+    q = {"feature": feature, "feature_id": feature_id,
+         "start_time": start_time, "end_time": end_time,
+         "fields": fields, "collection_name": chosen}
     r = _fetch("hydrocron",
                "https://soto.podaac.earthdatacloud.nasa.gov/hydrocron/v1/"
-               "timeseries",
-               {"feature": feature, "feature_id": feature_id,
-                "start_time": start_time, "end_time": end_time,
-                "fields": fields})
+               "timeseries", q)
     return {"feature": feature, "feature_id": feature_id,
+            "collection_name": chosen,
+            "collection_was_named_by": "caller" if collection_name else "this tool",
             **parse_hydrocron(r.json()), **_meta(r)}
 
 
@@ -528,7 +572,11 @@ def record_fixtures() -> int:
             {"feature": "Reach", "feature_id": "63470800171",
              "start_time": "2024-01-25T00:00:00Z",
              "end_time": "2024-03-29T00:00:00Z",
-             "fields": "reach_id,time_str,wse,width"}).text,
+             "fields": "reach_id,time_str,wse,width",
+             # Named, like every other request this server makes: a
+             # fixture recorded from whatever the service defaulted to
+             # would change meaning under the maintainers' feet.
+             "collection_name": HYDROCRON_DEFAULT_COLLECTION["Reach"]}).text,
     }
     only = [a for a in sys.argv[2:] if not a.startswith("-")]
     for name, fn in jobs.items():
