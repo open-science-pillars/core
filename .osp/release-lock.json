@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "core",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "package_type": "foundation",
   "agent_plugins_spec": "1.0.0",
   "repository_classification_digest": "sha256:2edfd80a0d4cd3283f96b0206cb1cea0c77be3542160f97272303ba4f73f15d5",
@@ -16,7 +16,7 @@
   "skills_digest": "sha256:75380b1611652ae0093ce4556b4b66dd347a9246c43f82c0504980cf7bc334d1",
   "verification_digest": "sha256:4861b86f70b1144492b1e3c0617f85b255d5dd2d5d3f761d672453a5e43747c1",
   "adapters": {
-    "claude": "sha256:a59b90d0512d9b535addf4b19a27310405c556a5a0eee8601fe34fbfe1741a6a",
-    "agent-plugins": "sha256:d2157addc3f3a2375d6b86d07fed8ccbc134b510aa793aad7ced2b087354537c"
+    "claude": "sha256:d2d00e549e5e826473a0cca819a5e58497ceb4477283cce0cf3a4426684e9263",
+    "agent-plugins": "sha256:02aca2fe357135b37607c0495b1501c0899c4c14f66d40dc43f60f92fed8c58c"
   }
 }
