@@ -83,8 +83,8 @@ What the checker cannot decide. Numbered so findings can cite them.
 5. **Eval coverage.** Every `severity: high` gotcha carries an
    `eval_case` id matching a case in the home of the plugin's cases:
    the plugin's `evals/`, or, when the bundle's index names an eval
-   repository as that home (ocean-science names ecco-agent-evals), that
-   repository's `cases/` (a checkout beside the plugin, or the case
+   repository as that home (ocean-science names agent-evals, its ECCO
+   set under `ecco/cases/`), that set's case directory (a checkout beside the plugin, or the case
    file fetched from the repository); absent or dangling 🟡. Then read
    the case: the prompt must not coach the answer, the expected
    behavior must turn on the gotcha's mechanism, and `concept_basis`
