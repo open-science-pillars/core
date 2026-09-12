@@ -57,3 +57,5 @@ probes:
     - --out
     - ${WORK}/attestation.json
     attestation: ${WORK}/attestation.json
+  golden-computation:
+  - verification/analysis_pipeline.py
