@@ -25,11 +25,22 @@ dependency, so installing one of them installs core with it; the command
 above is for core on its own. An install stays at the release it was
 installed from: `claude plugin update core@open-science-pillars` moves
 it to the current one, and `claude plugin list` shows what you have.
-Claude Code is the supported runtime; Claude Cowork installs from the
-same marketplace and is tested; OpenAI Codex arrives through the Agent
-Plugins projection, not built yet; Claude Science is a future runtime.
-What each word asserts is in the marketplace repository's
-docs/runtime-distribution.md.
+Which runtimes this release is qualified on is the table below, rendered
+from the qualification records; what each word asserts is in the
+marketplace repository's docs/runtime-distribution.md.
+
+<!-- osp-runtimes:start -->
+Runtime support for core 0.5.0 (release lock `sha256:da7c20ab55ba`), rendered by build-kit's `osp.py advertise` from `.osp/surfaces.yaml` and the qualification records; edit those, not this block.
+
+| Runtime | Role | Declared status | Qualification |
+|---|---|---|---|
+| Claude Code | development and runtime, required | supported | Qualified on 2026-09-12 |
+| Claude Cowork | runtime, required | tested | Not qualified |
+| OpenAI Codex | runtime, required | planned | Not qualified |
+| Claude Science | future runtime | limited-release | Outside the required matrix |
+
+A runtime is advertised as supported only on a qualified record for this exact release; a release stays valid when a runtime is not qualified, and that runtime is simply not advertised.
+<!-- osp-runtimes:end -->
 
 ## Your first run
 
