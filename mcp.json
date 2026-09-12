@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "earthdata": {
+      "type": "streamable-http",
+      "url": "https://cmr.earthdata.nasa.gov/mcp/v1"
+    },
+    "observations": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "${PLUGIN_ROOT}/connectors/observations_mcp.py"
+      ]
+    }
+  }
+}
