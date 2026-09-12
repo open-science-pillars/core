@@ -1,9 +1,17 @@
 # core
 
-The Open Science Pillars foundation plugin: earth science data formats,
+The Open Science Pillars foundation capability: earth science data formats,
 statistics, uncertainty quantification, cartography, quality control,
 reproducibility, analysis review, and the start / discover-data / report
-workflows. Domain plugins (ocean-science first) build on it.
+workflows. The domain capabilities (ocean-science, hydrology) build on it.
+
+In the organization's terms (`.osp/repository.yaml`) this is a foundation
+repository serving every Earth science sphere; its knowledge bundle is
+cross-cutting conventions. Its canonical behavior is the skills under
+`skills/`, one `SKILL.md` per workflow, which every runtime's package
+projects unchanged; the agents under `agents/` orchestrate them and hold
+no behavior of their own. The Claude package files are that projection
+(`.osp/package.yaml` is the source they must agree with).
 
 ## Install
 
@@ -17,7 +25,11 @@ dependency, so installing one of them installs core with it; the command
 above is for core on its own. An install stays at the release it was
 installed from: `claude plugin update core@open-science-pillars` moves
 it to the current one, and `claude plugin list` shows what you have.
-Cowork and Claude Science: add the marketplace and install from it.
+Claude Code is the supported runtime; Claude Cowork installs from the
+same marketplace and is tested; OpenAI Codex arrives through the Agent
+Plugins projection, not built yet; Claude Science is a future runtime.
+What each word asserts is in the marketplace repository's
+docs/runtime-distribution.md.
 
 ## Your first run
 
