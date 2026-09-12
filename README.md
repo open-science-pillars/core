@@ -34,7 +34,7 @@ Runtime support for core 0.5.1 (release lock `sha256:46a8500b49d6`), rendered by
 
 | Runtime | Role | Declared status | Qualification |
 |---|---|---|---|
-| Claude Code | development and runtime, required | supported | Supported (development environment) (record is for another release) |
+| Claude Code | development and runtime, required | supported | Qualified on 2026-09-12 |
 | Claude Cowork | runtime, required | tested | Not qualified |
 | OpenAI Codex | runtime, required | planned | Not qualified |
 | Claude Science | future runtime | limited-release | Outside the required matrix |

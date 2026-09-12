@@ -34,6 +34,8 @@ qualification:
   - skill-invocation
   - knowledge-resolution
   - dependency-resolution
+  - connector-invocation
+  - side-effect-confirmation
   - golden-computation
   - prove
   - receipt
