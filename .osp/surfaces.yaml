@@ -38,3 +38,22 @@ qualification:
   - prove
   - receipt
   - release-lock
+probes:
+  skill-invocation:
+    skill: start
+    prompt: What science tools do I have set up here, and what should I do next?
+    expect:
+    - core
+  prove:
+    prompt: 'Run the capability''s attested reference computation on its synthetic fixture and report
+      the headline it prints. The command is: uv run ${PLUGIN_ROOT}/verification/trend_computation.py
+      --runtime ${RUNTIME} --out ${WORK}/receipt.json'
+    receipt: ${WORK}/receipt.json
+    command:
+    - uv
+    - run
+    - ${PLUGIN_ROOT}/verification/trend_attester.py
+    - ${WORK}/receipt.json
+    - --out
+    - ${WORK}/attestation.json
+    attestation: ${WORK}/attestation.json

@@ -59,7 +59,11 @@ mapping task end to end. Unfamiliar with a term below? See the
 - **A knowledge bundle** of cross-cutting conventions (CF metadata, calendar
   traps, the sentinel fill-values that silently poison a mean).
 - **Verification**: automated notebooks that re-check each workflow on small
-  test data, so a broken change fails loudly.
+  test data, so a broken change fails loudly; and one attested reference
+  computation (`verification/trend_computation.py`, verified by
+  `verification/trend_attester.py`) whose receipt names the capability
+  release and the runtime that ran it, so a result from any runtime is
+  checked by the same deterministic attester.
 
 Data discovery uses the NASA Earthdata connector when available and falls
 back to knowledge-based discovery otherwise (see CONNECTORS.md).

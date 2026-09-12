@@ -12,9 +12,9 @@
   "agents_digest": "sha256:cb51ccadfc4be4f326ec15130017f4bde0710b1f10eb01fc045d975fd19c1992",
   "connectors_digest": "sha256:6dd90f839adb7ce3c22c5a29446ab976934224f834ab5b4b6714c2eeaee27fb1",
   "evals_digest": "sha256:6eb4e85063c0c6506a05e65570f394921ca01b748ee5d61c95bfc01f047f05b6",
-  "knowledge_digest": "sha256:5ff4239f2babfe17de6ca082bdfd312bd6522e32d28f4eb8d940cd45584d3b15",
+  "knowledge_digest": "sha256:4b37bb55144b4e558a350041c034886a58a1c503e93f0cfc4fe378a01a7d7eb9",
   "skills_digest": "sha256:75380b1611652ae0093ce4556b4b66dd347a9246c43f82c0504980cf7bc334d1",
-  "verification_digest": "sha256:0e78c349643749efb3e5c2056779facbd9b4ddee82fde56212ad57c956d2d357",
+  "verification_digest": "sha256:8e990e2d025214edd0c6cdabc779a6f68f83c88383c5ae3b50a2e357682c0224",
   "adapters": {
     "claude": "sha256:a59b90d0512d9b535addf4b19a27310405c556a5a0eee8601fe34fbfe1741a6a",
     "agent-plugins": "sha256:d2157addc3f3a2375d6b86d07fed8ccbc134b510aa793aad7ced2b087354537c"

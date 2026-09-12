@@ -2,6 +2,12 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-09-12 · computations/synthetic-trend.md (draft): the reference
+  attested computation, the global-mean trend of the synthetic fixture,
+  with its executor and attester under verification/; the receipt
+  names the capability release and the runtime (docs/receipt-identity.md
+  in nasa-daac-knowledge), so a result from any runtime verifies under
+  one attester. Draft until a steward signs it. (claude-code)
 - 2026-09-12 · index.md and every concept: the bundle declares
   `sphere_scope: cross-cutting` in its root index and each concept
   carries an empty `spheres` list, because these conventions serve

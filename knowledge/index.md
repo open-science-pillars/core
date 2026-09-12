@@ -22,3 +22,7 @@ review date, status stable.
 - [Satellite QA flag decoding (MODIS, Landsat, Sentinel-2)](conventions/satellite-qa-flag-decoding.md), type: convention, status: stable, verified
 - [Dataset citation and DOI conventions](conventions/dataset-citations.md), type: convention, status: stable, verified
 - [Hamed-Rao modified Mann-Kendall can return NaN](gotchas/hamed-rao-mk-nan.md), type: dataset-gotcha, severity medium, status: stable, verified
+
+## computations (OKF v0.2 section 10)
+
+- [Global-mean temperature trend of the synthetic fixture (attested)](computations/synthetic-trend.md), status: draft; the reference computation whose receipt names the capability release and the runtime, verified by verification/trend_attester.py
