@@ -1,6 +1,7 @@
-# Package identity, content and declared dependencies (ADR B). The Claude
-# manifest .claude-plugin/plugin.json is a projection of this file and the
-# gate fails when the two disagree.
+# Package identity, content, dependencies, presentation metadata and REACH
+# (ADR B). The Claude package files and the Agent Plugins package are
+# rendered from this file by build-kit's osp.py render; the gate fails on
+# a hand edit to any of them.
 schema_version: 1
 package:
   name: core
@@ -16,3 +17,28 @@ content:
 dependencies:
   capabilities: []
   knowledge: []
+metadata:
+  description: 'Foundation: earth science data formats, statistics, uncertainty quantification, cartography,
+    quality control, reproducibility, analysis review.'
+  keywords:
+  - netcdf
+  - xarray
+  - cartopy
+  - geotiff
+  - zarr
+  - climate
+  - geospatial
+  - qc
+  - uncertainty
+  - reproducibility
+reach:
+  servers:
+    earthdata:
+      type: streamable-http
+      url: https://cmr.earthdata.nasa.gov/mcp/v1
+    observations:
+      type: stdio
+      command: uv
+      args:
+      - run
+      - ${PLUGIN_ROOT}/connectors/observations_mcp.py

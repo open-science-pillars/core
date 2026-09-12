@@ -1,0 +1,38 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "core",
+  "version": "0.5.0",
+  "description": "Foundation: earth science data formats, statistics, uncertainty quantification, cartography, quality control, reproducibility, analysis review.",
+  "author": {
+    "name": "Open Science Pillars Community"
+  },
+  "homepage": "https://github.com/open-science-pillars/core",
+  "repository": "https://github.com/open-science-pillars/core",
+  "license": "Apache-2.0",
+  "keywords": [
+    "netcdf",
+    "xarray",
+    "cartopy",
+    "geotiff",
+    "zarr",
+    "climate",
+    "geospatial",
+    "qc",
+    "uncertainty",
+    "reproducibility"
+  ],
+  "extensions": {
+    "io.github.open-science-pillars": {
+      "kind": "foundation",
+      "status": "available",
+      "spheres": [],
+      "primary_sphere": null,
+      "discipline": null,
+      "package_type": "foundation",
+      "dependencies": {
+        "capabilities": [],
+        "knowledge": []
+      }
+    }
+  }
+}
