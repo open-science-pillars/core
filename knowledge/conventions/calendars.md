@@ -1,5 +1,6 @@
 ---
 type: convention
+spheres: []
 title: Calendar handling, and the DJF year-boundary trap
 description: "CF calendars, cftime, month-length weighting, and the DJF season trap: December belongs to the following winter, not its own calendar year's."
 tags: [calendar, cftime, seasons, djf, time]

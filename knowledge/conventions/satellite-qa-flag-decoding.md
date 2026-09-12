@@ -1,5 +1,6 @@
 ---
 type: convention
+spheres: []
 title: "Satellite QA flag decoding: MODIS, Landsat Collection 2, Sentinel-2"
 description: "Bit and class layouts for decoding satellite QA layers: MODIS VI Quality, Landsat C2 QA_PIXEL, Sentinel-2 SCL; used by the QC QA-flag check."
 tags: [qc, qa-flags, modis, landsat, sentinel-2, bitfield]

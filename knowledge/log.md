@@ -2,6 +2,12 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-09-12 · index.md and every concept: the bundle declares
+  `sphere_scope: cross-cutting` in its root index and each concept
+  carries an empty `spheres` list, because these conventions serve
+  every Earth science sphere (ADR A in the marketplace repository).
+  The key sits outside the signed text; no claim changed.
+  (claude-code)
 - 2026-09-06 · conventions/observation-capture.md (draft): the
   canonical row is stated as endpoint independent (UTC time or date,
   decimal-string value, approval status, sorted qualifiers, bare site

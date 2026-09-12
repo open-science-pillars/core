@@ -1,5 +1,6 @@
 ---
 type: convention
+spheres: []
 title: "Physical-bounds screening table for geophysical QC"
 description: "Hard and plausible screening ranges for common geophysical variables; the QC bounds check reads these, they are screening thresholds not truth."
 tags: [qc, physical-bounds, screening, geophysical]

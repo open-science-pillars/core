@@ -1,5 +1,6 @@
 ---
 type: dataset-gotcha
+spheres: []
 title: "Hamed-Rao modified Mann-Kendall can return NaN; detect it and fall back to the original test"
 description: "The Hamed-Rao autocorrelation correction occasionally yields a NaN p-value; undetected, those cells read as non-significant and silently blank a trend map."
 tags: [mann-kendall, hamed-rao, autocorrelation, trend, pymannkendall, nan]
