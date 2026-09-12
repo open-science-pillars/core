@@ -1,5 +1,6 @@
 ---
 type: convention
+spheres: []
 title: "Smell-test anchors: order-of-magnitude sanity ranges for headline earth-science quantities"
 description: "Cross-cutting order-of-magnitude anchors used by the post-computation review: the expected range a headline global quantity should sit near, so an out-of-anchor value is flagged instead of reported."
 tags: [smell-test, sanity-check, expected-range, climatology, review]

@@ -1,0 +1,18 @@
+# Package identity, content and declared dependencies (ADR B). The Claude
+# manifest .claude-plugin/plugin.json is a projection of this file and the
+# gate fails when the two disagree.
+schema_version: 1
+package:
+  name: core
+  version: 0.5.0
+  type: foundation
+content:
+  skills: ./skills
+  agents: ./agents
+  knowledge: ./knowledge
+  verification: ./verification
+  connectors: ./connectors
+  evals: ./evals
+dependencies:
+  capabilities: []
+  knowledge: []

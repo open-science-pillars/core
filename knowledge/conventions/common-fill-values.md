@@ -1,5 +1,6 @@
 ---
 type: dataset-gotcha
+spheres: []
 title: "Unmasked fill values: the sentinel list and detection recipe"
 description: Files that use sentinel values (-9999 and kin) without declaring _FillValue decode as real data and silently bias every statistic.
 tags: [fill-values, sentinels, netcdf, qc]

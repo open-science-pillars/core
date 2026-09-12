@@ -1,5 +1,6 @@
 ---
 type: convention
+spheres: []
 title: CF conventions for analysis outputs
 description: "The CF metadata practice this org's outputs follow: standard names, units, coordinate attributes, grid mappings, history provenance."
 tags: [cf, metadata, netcdf, provenance]

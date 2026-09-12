@@ -1,5 +1,6 @@
 ---
 okf_version: "0.2"
+sphere_scope: cross-cutting
 ---
 
 # core knowledge bundle
