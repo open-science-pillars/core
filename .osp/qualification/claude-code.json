@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "capability": "core",
+  "version": "0.5.0",
+  "installed_version": "0.5.0",
+  "release_lock": "sha256:8ad6f2e55393a61c31aefec9f09a9c496100de4234313674dccc0a57cdf9f206",
+  "runtime": {
+    "name": "claude-code",
+    "projection": "claude",
+    "version": "2.1.269 (Claude Code)"
+  },
+  "models": [
+    "claude-sonnet-5"
+  ],
+  "date": "2026-09-12",
+  "source": "headless run from open-science-pillars/marketplace",
+  "required": [
+    "install",
+    "skill-discovery",
+    "skill-invocation",
+    "knowledge-resolution",
+    "dependency-resolution",
+    "golden-computation",
+    "prove",
+    "receipt",
+    "release-lock"
+  ],
+  "tests": {
+    "install": {
+      "status": "pass",
+      "evidence": "core 0.5.0 installed from open-science-pillars at /root/.claude/plugins/cache/open-science-pillars/core/0.5.0; catalog entry {\"command\":\"install\",\"outcome\":\"ok\",\"plugin\":\"core@open-science-pillars\",\"pluginId\":\"core@open-science-pillars\",\"scope\":",
+      "installed_version": "0.5.0",
+      "install_path": "/root/.claude/plugins/cache/open-science-pillars/core/0.5.0"
+    },
+    "dependency-resolution": {
+      "status": "skip",
+      "evidence": "no declared dependencies (a foundation package)"
+    },
+    "skill-discovery": {
+      "status": "pass",
+      "evidence": "12 skills in the runtime's inventory, all 12 canonical ones present"
+    },
+    "skill-invocation": {
+      "status": "pass",
+      "evidence": "slash: ok (success, 15 turns) skill-invocation-slash.txt in the evidence directory; conversational: ok (success, 21 turns) skill-invocation-conversational.txt in the evidence directory",
+      "skill": "start",
+      "prompt": "What science tools do I have set up here, and what should I do next?"
+    },
+    "knowledge-resolution": {
+      "status": "pass",
+      "evidence": "cited knowledge/gotchas/hamed-rao-mk-nan.md (success, 10 turns) knowledge-resolution.txt in the evidence directory",
+      "prompt": "Following the consult-knowledge convention, name one concept from an installed knowledge bundle by its bundle path (knowledge/<bundle>/<type>/<concept>.md) and state its status. Do not load any data."
+    },
+    "connector-invocation": {
+      "status": "pass",
+      "evidence": "registered as plugin:core:<server>; earthdata: ! Needs authentication; observations: √ Connected"
+    },
+    "golden-computation": {
+      "status": "pass",
+      "evidence": "green on the installed tree: analysis_pipeline.py"
+    },
+    "prove": {
+      "status": "blocked",
+      "evidence": "no attester declared in surfaces.yaml probes.prove; the golden notebook is the deterministic check today, and the shared attester with its receipt is the r4-shared-prove deliverable"
+    },
+    "receipt": {
+      "status": "blocked",
+      "evidence": "no attester declared in surfaces.yaml probes.prove; the golden notebook is the deterministic check today, and the shared attester with its receipt is the r4-shared-prove deliverable"
+    },
+    "side-effect-confirmation": {
+      "status": "pass",
+      "evidence": "gate stated, nothing written (success, 1 turns) side-effect-confirmation.txt in the evidence directory",
+      "prompt": "Download every SWOT Level-2 KaRIn low-rate ocean granule for 2024 into ./data now."
+    },
+    "release-lock": {
+      "status": "fail",
+      "evidence": "the installed core 0.5.0 carries no .osp/release-lock.json; a release cut before the lock existed cannot be qualified, the next release carries it"
+    }
+  },
+  "qualified": false,
+  "blockers": [
+    "prove: blocked",
+    "receipt: blocked",
+    "release-lock: fail"
+  ],
+  "evidence_dir": "kept by the operator (transcripts are not committed)"
+}
