@@ -1,5 +1,13 @@
-# Interim repository ownership; replace with the repository maintainer team at handoff.
-* @PaulMRamirez
+# Ownership by team (ADR A, decision 10; the registry is osp/teams.yaml in
+# build-kit). One person occupies every team during the interim solo period;
+# accepting a maintainer is a team membership change, not an edit here.
+* @open-science-pillars/foundation-maintainers
 
-# Knowledge bundle stewardship (named stewards; PRs touching the bundle auto-request them)
-/knowledge/ @PaulMRamirez
+# The foundation bundle: cross-cutting conventions, stewarded by the
+# foundation team.
+/knowledge/       @open-science-pillars/foundation-maintainers
+
+# Runtime projections (ADR B): the Claude package files are the Cowork
+# projection of .osp/package.yaml and belong to the runtime maintainers.
+/.claude-plugin/  @open-science-pillars/runtime-cowork-maintainers
+/.mcp.json        @open-science-pillars/runtime-cowork-maintainers
