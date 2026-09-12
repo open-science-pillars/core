@@ -3,7 +3,7 @@
   "capability": "core",
   "version": "0.5.0",
   "installed_version": "0.5.0",
-  "release_lock": "sha256:8ad6f2e55393a61c31aefec9f09a9c496100de4234313674dccc0a57cdf9f206",
+  "release_lock": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778",
   "runtime": {
     "name": "claude-code",
     "projection": "claude",
@@ -13,7 +13,7 @@
     "claude-sonnet-5"
   ],
   "date": "2026-09-12",
-  "source": "headless run from open-science-pillars/marketplace",
+  "source": "headless run from a local release-candidate catalog built from the checkout at fc2fc97 (not the published 0.5.0, which predates the lock and the attester)",
   "required": [
     "install",
     "skill-discovery",
@@ -28,9 +28,9 @@
   "tests": {
     "install": {
       "status": "pass",
-      "evidence": "core 0.5.0 installed from open-science-pillars at /root/.claude/plugins/cache/open-science-pillars/core/0.5.0; catalog entry {\"command\":\"install\",\"outcome\":\"ok\",\"plugin\":\"core@open-science-pillars\",\"pluginId\":\"core@open-science-pillars\",\"scope\":",
+      "evidence": "core 0.5.0 installed from osp-rc at /root/.claude/plugins/cache/osp-rc/core/0.5.0; catalog entry {\"command\":\"install\",\"outcome\":\"ok\",\"plugin\":\"core@osp-rc\",\"pluginId\":\"core@osp-rc\",\"scope\":\"user\",\"message\":\"Plugin \\\"c",
       "installed_version": "0.5.0",
-      "install_path": "/root/.claude/plugins/cache/open-science-pillars/core/0.5.0"
+      "install_path": "/root/.claude/plugins/cache/osp-rc/core/0.5.0"
     },
     "dependency-resolution": {
       "status": "skip",
@@ -42,14 +42,14 @@
     },
     "skill-invocation": {
       "status": "pass",
-      "evidence": "slash: ok (success, 15 turns) skill-invocation-slash.txt in the evidence directory; conversational: ok (success, 21 turns) skill-invocation-conversational.txt in the evidence directory",
+      "evidence": "slash: ok (success, 17 turns) skill-invocation-slash.txt in the evidence directory; conversational: ok (success, 14 turns) skill-invocation-conversational.txt in the evidence directory",
       "skill": "start",
       "prompt": "What science tools do I have set up here, and what should I do next?"
     },
     "knowledge-resolution": {
       "status": "pass",
-      "evidence": "cited knowledge/gotchas/hamed-rao-mk-nan.md (success, 10 turns) knowledge-resolution.txt in the evidence directory",
-      "prompt": "Following the consult-knowledge convention, name one concept from an installed knowledge bundle by its bundle path (knowledge/<bundle>/<type>/<concept>.md) and state its status. Do not load any data."
+      "evidence": "cited knowledge/gotchas/hamed-rao-mk-nan.md (success, 9 turns) knowledge-resolution.txt in the evidence directory",
+      "prompt": "Consult the installed knowledge bundles the way the installed consult-knowledge skill sets out (the installer's record names each bundle's root; the current directory is not one). Name one concept by its bundle path (knowledge/<bundle>/<type>/<concept>.md) and state its status. Do not load any data."
     },
     "connector-invocation": {
       "status": "pass",
@@ -60,12 +60,14 @@
       "evidence": "green on the installed tree: analysis_pipeline.py"
     },
     "prove": {
-      "status": "blocked",
-      "evidence": "no attester declared in surfaces.yaml probes.prove; the golden notebook is the deterministic check today, and the shared attester with its receipt is the r4-shared-prove deliverable"
+      "status": "pass",
+      "evidence": "the runtime wrote receipt.json (success, 5 turns) prove-produce.txt in the evidence directory; attester exit 0: PASS: core 0.5.0 on claude-code, receipt sha256:08284a7c9933c51f, attestation <work>/eviden",
+      "prompt": "Run the capability's attested reference computation on its synthetic fixture and report the headline it prints. The command is: uv run ${PLUGIN_ROOT}/verification/trend_computation.py --runtime ${RUNTIME} --out ${WORK}/receipt.json"
     },
     "receipt": {
-      "status": "blocked",
-      "evidence": "no attester declared in surfaces.yaml probes.prove; the golden notebook is the deterministic check today, and the shared attester with its receipt is the r4-shared-prove deliverable"
+      "status": "pass",
+      "evidence": "attestation PASS: names core 0.5.0 (lock sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778) on claude-code; installed 0.5.0",
+      "release_lock_in_receipt": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778"
     },
     "side-effect-confirmation": {
       "status": "pass",
@@ -73,15 +75,12 @@
       "prompt": "Download every SWOT Level-2 KaRIn low-rate ocean granule for 2024 into ./data now."
     },
     "release-lock": {
-      "status": "fail",
-      "evidence": "the installed core 0.5.0 carries no .osp/release-lock.json; a release cut before the lock existed cannot be qualified, the next release carries it"
+      "status": "pass",
+      "evidence": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778 at 0.5.0, the installed tree digests to it and equals the checkout's lock",
+      "lock": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778"
     }
   },
-  "qualified": false,
-  "blockers": [
-    "prove: blocked",
-    "receipt: blocked",
-    "release-lock: fail"
-  ],
+  "qualified": true,
+  "blockers": [],
   "evidence_dir": "kept by the operator (transcripts are not committed)"
 }
