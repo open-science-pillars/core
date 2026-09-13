@@ -1,33 +1,53 @@
 # core
 
-The Open Science Pillars foundation capability: earth science data formats,
-statistics, uncertainty quantification, cartography, quality control,
-reproducibility, analysis review, and the start / discover-data / report
-workflows. The domain capabilities (ocean-science, hydrology) build on it.
-
-In the organization's terms (`.osp/repository.yaml`) this is a foundation
-repository serving every Earth science sphere; its knowledge bundle is
-cross-cutting conventions. Its canonical behavior is the skills under
-`skills/`, one `SKILL.md` per workflow, which every runtime's package
-projects unchanged; the agents under `agents/` orchestrate them and hold
-no behavior of their own. The Claude package files are that projection
-(`.osp/package.yaml` is the source they must agree with).
+The foundation capability of Open Science Pillars: the skills a scientist
+uses in every analysis (opening NetCDF, Zarr, GeoTIFF and GRIB files;
+statistics and trends; uncertainty on every headline number; maps; quality
+control; reproducible outputs; a review pass) and three workflows you
+invoke by name: `start` orients you in a project, `discover-data` finds a
+dataset, `report` writes the analysis up. The domain capabilities
+(ocean-science, hydrology) build on it and install it for you. It is a
+foundation repository serving every Earth science sphere (`kind:
+foundation` in `.osp/repository.yaml`); the words used on this page
+(capability, plugin, sphere, knowledge bundle, runtime) are defined in the
+[glossary](https://github.com/open-science-pillars/marketplace/blob/main/GLOSSARY.md).
 
 ## Install
+
+On Claude Code:
 
 ```bash
 claude plugin marketplace add open-science-pillars/marketplace
 claude plugin install core@open-science-pillars
 ```
 
-The domain plugins (ocean-science, hydrology) declare core as a
-dependency, so installing one of them installs core with it; the command
-above is for core on its own. An install stays at the release it was
-installed from: `claude plugin update core@open-science-pillars` moves
+What comes with it: nothing else. core declares no dependencies; it is the
+dependency every domain capability declares, so installing ocean-science
+or hydrology installs core alongside. An install stays at the release it
+was installed from: `claude plugin update core@open-science-pillars` moves
 it to the current one, and `claude plugin list` shows what you have.
+
+On Claude Cowork: add the marketplace by repository
+(`open-science-pillars/marketplace`) under Customize > Plugins > Add
+marketplace, then install the same capability from it; the shell commands
+on this page are for Claude Code.
+
+Local requirements: [uv](https://docs.astral.sh/uv/getting-started/installation/).
+The observations connector and every script here (the golden notebook,
+the reference computation and its attester) declare their dependencies in
+a PEP 723 header and run as `uv run <script>`; uv builds the environment
+on first run, so nothing is installed by hand. Never `python script.py`:
+it skips the header and fails at the first import. No account is needed
+for anything in core (an optional USGS key raises a rate limit; see
+[CONNECTORS.md](CONNECTORS.md)); an Earthdata Login matters only when a
+domain capability downloads NASA data.
+
+## Runtimes
+
 Which runtimes this release is qualified on is the table below, rendered
 from the qualification records; what each word asserts is in the
-marketplace repository's docs/runtime-distribution.md.
+marketplace repository's
+[docs/runtime-distribution.md](https://github.com/open-science-pillars/marketplace/blob/main/docs/runtime-distribution.md).
 
 <!-- osp-runtimes:start -->
 Runtime support for core 0.5.0 (release lock `sha256:da7c20ab55ba`), rendered by build-kit's `osp.py advertise` from `.osp/surfaces.yaml` and the qualification records; edit those, not this block.
@@ -42,41 +62,60 @@ Runtime support for core 0.5.0 (release lock `sha256:da7c20ab55ba`), rendered by
 A runtime is advertised as supported only on a qualified record for this exact release; a release stays valid when a runtime is not qualified, and that runtime is simply not advertised.
 <!-- osp-runtimes:end -->
 
-## Your first run
+## First result
 
-New here? Do the 10-minute [Getting Started tutorial](https://github.com/open-science-pillars/tutorials/blob/main/tutorial-1-getting-started.qmd):
-it installs the plugin, orients you, and walks a real quality-control and
-mapping task end to end. Unfamiliar with a term below? See the
-[glossary](https://github.com/open-science-pillars/marketplace/blob/main/GLOSSARY.md).
+[tutorials/quickstart.md](tutorials/quickstart.md) in this repository
+takes about five minutes and assumes only that the plugin is installed
+and `uv` is on your path: orient, find data, compute under the house
+rules, review, report, then run the attested reference computation whose
+receipt names this release and the runtime that ran it. The long form is
+[Tutorial 1, Getting Started](https://github.com/open-science-pillars/tutorials/blob/main/tutorial-1-getting-started.qmd)
+in the tutorials repository (measured at 4.6 minutes on a fresh install):
+it installs the plugin and walks a quality-control and mapping task end
+to end.
 
 ## What's inside
 
-- **Skills** for the everyday science stack: data formats, statistics and
-  trends, uncertainty quantification, cartography, quality control,
-  reproducibility, and a review pass, plus three workflows you invoke by
-  name: *start* (orient in a project), *discover-data* (find a dataset), and
-  *report* (write it up). Report enforces the house rule: no headline number
-  without an uncertainty statement or an explicit reason there isn't one.
-  One more skill, *consult-knowledge*, states once how every skill and
-  agent reads the installed knowledge bundles before acting on a dataset:
-  how every installed bundle is found (through the installer's record of
-  plugins, so a bundle that arrives as a dependency is read the moment it
-  lands), how to cite a match and voice its status, which concept wins
-  when two disagree. The *start* screen reports each installed plugin's
-  version and its knowledge in numbers, read from disk.
-- **Agents**: a linter that checks the knowledge bundle for problems and a
-  seeder that drafts new evidence-linked concepts. Both propose; neither
-  merges on its own.
-- **A knowledge bundle** of cross-cutting conventions (CF metadata, calendar
-  traps, the sentinel fill-values that silently poison a mean).
-- **Verification**: automated notebooks that re-check each workflow on small
-  test data, so a broken change fails loudly; and one attested reference
-  computation (`verification/trend_computation.py`, verified by
-  `verification/trend_attester.py`) whose receipt names the capability
-  release and the runtime that ran it, so a result from any runtime is
-  checked by the same deterministic attester.
+- **Skills** (`skills/`, one `SKILL.md` each): `data-formats`,
+  `xarray-fundamentals`, `basic-statistics`, `uncertainty-quantification`,
+  `cartography`, `quality-control`, `reproducibility`, `analysis-review`,
+  `consult-knowledge`, and the three workflows `start`, `discover-data`
+  and `report`. The report workflow enforces the house rule: no headline
+  number without an uncertainty statement or an explicit reason there is
+  none.
+- **Agents** (`agents/`): `knowledge-linter` checks a knowledge bundle for
+  problems; `knowledge-seeder` drafts new evidence-linked concepts. Both
+  propose; neither merges on its own.
+- **Knowledge** (`knowledge/`): core's own bundle of cross-cutting
+  conventions (CF metadata, calendars, the sentinel fill values that
+  silently poison a mean, smell-test ranges), one gotcha and one attested
+  computation. The provider bundles (PO.DAAC, ESDIS) live in
+  [nasa-daac-knowledge](https://github.com/open-science-pillars/nasa-daac-knowledge)
+  and arrive with the domain capabilities; `consult-knowledge` states how
+  every installed bundle is found and cited.
+- **Verification** (`verification/`): `analysis_pipeline.py`, the golden
+  notebook that re-checks the workflows on a synthetic fixture;
+  `trend_computation.py` and `trend_attester.py`, the attested reference
+  computation and the deterministic attester that checks its receipt.
+- **Evals** (`evals/`): four hand-graded judgment cases (`area-weighting`,
+  `fill-value-detection`, `trend-method`, `uncertainty-statement`) and
+  their seed results.
 
-Data discovery uses the NASA Earthdata connector when available and falls
-back to knowledge-based discovery otherwise (see CONNECTORS.md).
+## Connectors and credentials
 
-License: Apache-2.0. Cite via CITATION.cff.
+Data discovery uses the NASA Earthdata connector when it is reachable and
+falls back to knowledge-based discovery otherwise; the observations
+connector fetches point observations from five public agency sources.
+What leaves your machine, which credential is read where, and what
+happens when a connector is unavailable is in [CONNECTORS.md](CONNECTORS.md).
+
+## Contributing
+
+Start with the marketplace repository's
+[CONTRIBUTING.md](https://github.com/open-science-pillars/marketplace/blob/main/CONTRIBUTING.md)
+and the guides under its `docs/` (contributing a skill, contributing
+knowledge, testing, the package authoring guide).
+
+## License and citation
+
+Apache-2.0. Cite via [CITATION.cff](CITATION.cff).
