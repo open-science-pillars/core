@@ -1,0 +1,759 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "e07b73fb-82b4-43f5-b564-f8ba3b76df98",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "10.76",
+        "unit_of_measure": "ft",
+        "time": "1988-07-25T14:55:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 7,
+        "day": 25,
+        "time_of_day": "14:55:00+00:00"
+      },
+      "id": "000000f9-0512-4b22-bc9a-fc9f22ee4219",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "352a13d6-aa1c-4e44-bf41-0828402bdd3f",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.28",
+        "unit_of_measure": "ft",
+        "time": "1988-11-28T14:54:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 11,
+        "day": 28,
+        "time_of_day": "14:54:00+00:00"
+      },
+      "id": "05fd3ce4-e29d-4e2a-a968-41cb022e7080",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "9f6b7a89-9cf9-40d4-bec8-a9b83b1d4a70",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "13.16",
+        "unit_of_measure": "ft",
+        "time": "1988-10-25T17:48:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 10,
+        "day": 25,
+        "time_of_day": "17:48:00+00:00"
+      },
+      "id": "088c17e4-f3d1-4808-b2a8-b42d8806bcd1",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "ed5ef43e-cb71-40f1-b279-bb86cbce9875",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "11.47",
+        "unit_of_measure": "ft",
+        "time": "1989-08-03T11:30:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 8,
+        "day": 3,
+        "time_of_day": "11:30:00+00:00"
+      },
+      "id": "0b9e22db-876e-4b18-a81b-cb3aab97b6f8",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "de8e5f23-2501-49f3-9e07-822601c51327",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "10.32",
+        "unit_of_measure": "ft",
+        "time": "1989-05-03T13:55:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 5,
+        "day": 3,
+        "time_of_day": "13:55:00+00:00"
+      },
+      "id": "1991f5c9-a607-4348-b68d-6601d590f6c8",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "219e93f4-36e4-41f6-87c6-6ffc75df98df",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "11.81",
+        "unit_of_measure": "ft",
+        "time": "1989-04-28T15:20:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 4,
+        "day": 28,
+        "time_of_day": "15:20:00+00:00"
+      },
+      "id": "25a436c8-55c6-462f-9fd2-d275ffc6ac95",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "4ddc3655-82ae-4c7b-ace8-1f1967c0af17",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "11.17",
+        "unit_of_measure": "ft",
+        "time": "1989-09-26T11:35:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 9,
+        "day": 26,
+        "time_of_day": "11:35:00+00:00"
+      },
+      "id": "2a77b3b2-0d1f-457a-a8fe-199e4bbf53f6",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "88f796d1-3ca5-4e5c-adb2-1a725f7fa2eb",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "10.72",
+        "unit_of_measure": "ft",
+        "time": "1989-02-24T13:27:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 2,
+        "day": 24,
+        "time_of_day": "13:27:00+00:00"
+      },
+      "id": "2aaa2b7d-a9b5-4485-9fc2-85612116ddc2",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "239e2aec-8268-4340-8cb3-afcd5e1ba61c",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.02",
+        "unit_of_measure": "ft",
+        "time": "1989-10-19T11:45:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 10,
+        "day": 19,
+        "time_of_day": "11:45:00+00:00"
+      },
+      "id": "35e60478-17bc-4493-81b3-e2325c9be750",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "e5af5132-c769-4951-8689-db717ee8c784",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "9.39",
+        "unit_of_measure": "ft",
+        "time": "1988-06-23T14:15:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 6,
+        "day": 23,
+        "time_of_day": "14:15:00+00:00"
+      },
+      "id": "3ae912a0-edfb-4fdc-b1cf-d6eb4ef2aeb8",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "d692ba67-29ba-4518-89c1-1f4d86900bbd",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.64",
+        "unit_of_measure": "ft",
+        "time": "1989-01-25T13:17:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 1,
+        "day": 25,
+        "time_of_day": "13:17:00+00:00"
+      },
+      "id": "43ad5066-a867-45c7-bd47-1011a89d8377",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "f21d28a9-9027-4071-9abc-d9502048f252",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.57",
+        "unit_of_measure": "ft",
+        "time": "1988-04-27T14:20:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 4,
+        "day": 27,
+        "time_of_day": "14:20:00+00:00"
+      },
+      "id": "4bb2363d-d763-4ef2-b1a5-5013576a9507",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "7175e799-a03e-4f70-ad7b-51bfc665e386",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.27",
+        "unit_of_measure": "ft",
+        "time": "1989-11-29T15:00:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 11,
+        "day": 29,
+        "time_of_day": "15:00:00+00:00"
+      },
+      "id": "6973f6fc-a325-47ef-83fd-ffd6d9c28733",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "f158e078-f8c0-4efe-ad07-ce113bd9ea18",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.49",
+        "unit_of_measure": "ft",
+        "time": "1988-03-31T15:35:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 3,
+        "day": 31,
+        "time_of_day": "15:35:00+00:00"
+      },
+      "id": "7c502faf-7f73-404b-b6b3-3bb2b8c95885",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "97b0f85d-2f03-40a6-a2a8-e1ec1f171b15",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "11.97",
+        "unit_of_measure": "ft",
+        "time": "1989-10-17T13:41:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 10,
+        "day": 17,
+        "time_of_day": "13:41:00+00:00"
+      },
+      "id": "90e75cc4-b9df-4f8b-840c-160fbe88dc45",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "36fb56da-0df3-4aa6-9e63-970d6fec10bf",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.47",
+        "unit_of_measure": "ft",
+        "time": "1988-03-03T15:15:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 3,
+        "day": 3,
+        "time_of_day": "15:15:00+00:00"
+      },
+      "id": "9f270602-c17b-4fb5-b335-6b611ce0b2fa",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "08f61139-8b0d-44de-845c-109b83560109",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "10.56",
+        "unit_of_measure": "ft",
+        "time": "1988-12-30T14:36:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 12,
+        "day": 30,
+        "time_of_day": "14:36:00+00:00"
+      },
+      "id": "9fb2c036-0b67-49ca-99f5-8f2ea447d679",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "3395df38-5b14-4c72-9a5f-4dbae1e0e68a",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.53",
+        "unit_of_measure": "ft",
+        "time": "1989-12-19T13:00:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 12,
+        "day": 19,
+        "time_of_day": "13:00:00+00:00"
+      },
+      "id": "a10c4c17-fd93-4160-9f5a-b3ee56b77a2a",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "aa440bee-84b1-40e3-a851-c17777124a62",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.24",
+        "unit_of_measure": "ft",
+        "time": "1988-01-28T14:50:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 1,
+        "day": 28,
+        "time_of_day": "14:50:00+00:00"
+      },
+      "id": "a34ddfab-88e3-4252-ad4b-c06895658ebb",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "7e2b733b-46a3-4017-8874-bcd066539b11",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "7.86",
+        "unit_of_measure": "ft",
+        "time": "1988-08-22T12:45:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 8,
+        "day": 22,
+        "time_of_day": "12:45:00+00:00"
+      },
+      "id": "aadce443-3431-4d71-b5e0-cf3c9ba30c9f",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "eee5d8d1-8b89-4c94-a2af-02b97601f2b1",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "11.42",
+        "unit_of_measure": "ft",
+        "time": "1989-06-06T11:00:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 6,
+        "day": 6,
+        "time_of_day": "11:00:00+00:00"
+      },
+      "id": "b708176f-f136-4375-a062-bd5fb902936d",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "3ec22eb1-fa98-4736-8b7f-08e9dc50a04e",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "10.24",
+        "unit_of_measure": "ft",
+        "time": "1988-06-01T14:50:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 6,
+        "day": 1,
+        "time_of_day": "14:50:00+00:00"
+      },
+      "id": "d455ba65-eede-4b1b-be19-6c60389c7f3e",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "caaa934c-1c31-453e-ba3a-8d87552de678",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "12.54",
+        "unit_of_measure": "ft",
+        "time": "1988-04-26T15:20:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1988,
+        "month": 4,
+        "day": 26,
+        "time_of_day": "15:20:00+00:00"
+      },
+      "id": "f93e2f51-4961-49e6-8281-c5b65cd4cadc",
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "field_measurements_series_id": "6b03ab61-5463-4f30-8331-8e9840df89a9",
+        "reading_type": "ReferencePrimary",
+        "field_visit_id": "a9f7de6e-ce4c-4b0c-bde4-db95f1bf9a5d",
+        "parameter_code": "72019",
+        "monitoring_location_id": "USGS-255854080085601",
+        "observing_procedure_code": "S",
+        "observing_procedure": "GW level, steel tape",
+        "value": "11.97",
+        "unit_of_measure": "ft",
+        "time": "1989-03-24T17:04:00+00:00",
+        "qualifier": [
+          "Static"
+        ],
+        "vertical_datum": "Local Assumed Datum",
+        "approval_status": "Approved",
+        "measuring_agency": "USGS",
+        "last_modified": "2026-08-02T03:06:07.584197+00:00",
+        "control_condition": null,
+        "measurement_rated": null,
+        "year": 1989,
+        "month": 3,
+        "day": 24,
+        "time_of_day": "17:04:00+00:00"
+      },
+      "id": "facafe42-0404-49e0-97cb-059e1d9fc0eb",
+      "geometry": null
+    }
+  ],
+  "numberReturned": 24,
+  "links": [
+    {
+      "type": "application/geo+json",
+      "rel": "self",
+      "title": "This document as GeoJSON",
+      "href": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/field-measurements/items?f=json&monitoring_location_id=USGS-255854080085601&parameter_code=72019&datetime=1988-01-01%2F1989-12-31&limit=200&skipGeometry=true"
+    },
+    {
+      "rel": "alternate",
+      "type": "application/ld+json",
+      "title": "This document as RDF (JSON-LD)",
+      "href": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/field-measurements/items?f=jsonld&monitoring_location_id=USGS-255854080085601&parameter_code=72019&datetime=1988-01-01%2F1989-12-31&limit=200&skipGeometry=true"
+    },
+    {
+      "type": "text/html",
+      "rel": "alternate",
+      "title": "This document as HTML",
+      "href": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/field-measurements/items?f=html&monitoring_location_id=USGS-255854080085601&parameter_code=72019&datetime=1988-01-01%2F1989-12-31&limit=200&skipGeometry=true"
+    },
+    {
+      "type": "text/csv; charset=utf-8",
+      "rel": "alternate",
+      "title": "This document as CSV",
+      "href": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/field-measurements/items?f=csv&monitoring_location_id=USGS-255854080085601&parameter_code=72019&datetime=1988-01-01%2F1989-12-31&limit=200&skipGeometry=true"
+    },
+    {
+      "type": "application/json",
+      "title": "Field measurements",
+      "rel": "collection",
+      "href": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/field-measurements"
+    }
+  ],
+  "timeStamp": "2026-09-15T13:39:57.239793Z"
+}

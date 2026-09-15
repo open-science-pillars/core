@@ -53,17 +53,21 @@ section below says exactly what happens with and without it.
 ## Observations MCP (`observations`)
 
 **What it is.** `.mcp.json` runs `connectors/observations_mcp.py` from
-this plugin over stdio: one thin server exposing five authoritative
-observation sources as tools. USGS Water Data API stream gauges, NOAA CO-OPS
-tide stations, Argo profiling floats (Ifremer ERDDAP), PSMSL
-long-record tide gauges, and PO.DAAC Hydrocron SWOT river series.
-Every tool is a paper-thin translation from parameters to one
-official HTTPS request; no science lives in the server.
+this plugin over stdio: one thin server exposing seven authoritative
+observation sources as eleven tools. USGS Water Data API stream
+gauges and discrete groundwater levels, NOAA CO-OPS tide stations,
+Argo profiling floats (Ifremer ERDDAP), PSMSL long-record tide
+gauges, PO.DAAC Hydrocron SWOT river and lake series, the Nevada
+Geodetic Laboratory's GNSS station velocities, and the NOAA National
+Water Model retrospective on AWS. Every tool is a paper-thin
+translation from parameters to one official HTTPS request (or, for
+the retrospective's chunked store, a bounded set of object reads);
+no science lives in the server.
 
 **What leaves your machine.** Query parameters only: station, gauge,
-float, and reach identifiers, bounding boxes, and time ranges, sent
-over HTTPS to the agency endpoint named in each tool. One optional
-credential exists. If you set `API_USGS_PAT` in your environment (a
+well, float, lake and reach identifiers, coordinates, bounding boxes,
+and time ranges, sent over HTTPS to the agency endpoint named in each
+tool. One optional credential exists. If you set `API_USGS_PAT` in your environment (a
 key from https://api.waterdata.usgs.gov/signup/), the server sends
 its value as an `X-Api-Key` header to api.waterdata.usgs.gov and to
 no other host; the request URL that every response, capture manifest
@@ -72,8 +76,56 @@ selftests assert that a sentinel key appears in none of them. Unset,
 the USGS requests share the per-address bucket with everything else
 on your machine that calls the same API, and a 429 comes back as a
 structured error naming the variable and the reset window; the server
-never retries against that host. No file, no local path, and no data
-you hold is ever sent.
+never retries against that host. No other credential is read or
+sent by any tool: the Earthdata Login token some archives need is
+not used by this server (Hydrocron is anonymous), and the geodesy
+tables and the National Water Model bucket are public. No file, no
+local path, and no data you hold is ever sent.
+
+**Per tool, the round-three additions.** Each is one request against
+one source, guarded the same way, with a recorded fixture and an
+offline contract test.
+
+- `nwis_groundwater_levels`. What leaves: USGS site numbers, a
+  parameter code and a date window, to api.waterdata.usgs.gov,
+  collection `field-measurements` (the API has no separate
+  groundwater collection; the site-visit readings live there). The
+  key: the optional `API_USGS_PAT`, as above, header only, this host
+  only. When the source is unavailable: a structured error with the
+  API's status and message, no retry on 429; an unknown well is an
+  empty collection, reported as such and never as an outage.
+- `hydrocron_lake_timeseries`. What leaves: a prior lake database id,
+  a time window, a field list and the collection name, to
+  soto.podaac.earthdatacloud.nasa.gov. No credential: the service is
+  anonymous and the Earthdata token is not read. When unavailable: a
+  structured error carrying the service's own message; an unknown
+  field or collection is a 400 with the service's list, and an
+  unknown collection name is refused before it is sent.
+- `gnss_vertical_velocity`. What leaves: nothing but the table
+  request itself (one GET of the MIDAS velocity table for the frame,
+  5.4 MB for IGS20 as measured on 2026-09-15, once per process) to
+  geodesy.unr.edu; the
+  station id or coordinates are matched locally and never sent. No
+  credential. When unavailable: a structured error after one bounded
+  retry; a station missing from the table is reported with the
+  table's size, not as an outage.
+- `nwm_retrospective_streamflow`. What leaves: object GETs to
+  noaa-nwm-retrospective-3-0-pds.s3.amazonaws.com (the store
+  metadata, the reach index arrays, one 28-day streamflow chunk and
+  its time chunk per chunk in the window, under a budget of fourteen
+  chunks); the reach or gauge id is resolved locally against the
+  downloaded index. Measured bound (2026-09-15): the feature index is
+  a one-off 2.9 MB and the gauge index 68 KB per process; a
+  streamflow chunk is 4 to 9 MB, so a call at the full budget makes
+  at most 28 chunk requests and moves roughly 50 to 130 MB. Only the
+  CONUS and Alaska domains are served: the Hawaii and PR stores are
+  blosc/lz4 compressed (and Hawaii's time axis is in minutes), which
+  this server does not decode, so those two names are refused before
+  any request. No credential: the bucket is public and read
+  anonymously. When unavailable: a structured error after one
+  bounded retry; a window over the budget or outside the
+  retrospective's axis is refused before any chunk is read, with the
+  budget or the axis named; there is no default window.
 
 **What does not go through it.** Archive holdings. ECCO, SWOT, and
 GRACE retrieval happens through earthaccess as always; this server
@@ -85,14 +137,16 @@ every source.
 
 **Where the facts are maintained.** Endpoint, tool surface, and the
 correctness knowledge (datum conventions, quality flags, reference
-offsets) are dated concepts with staleness dates: CO-OPS, Argo, and
-PSMSL in `knowledge/connectors/` of
-github.com/open-science-pillars/ocean-science; USGS and Hydrocron in
-`knowledge/connectors/` of github.com/open-science-pillars/hydrology.
-This file deliberately does not restate them.
+offsets) are dated concepts with staleness dates: CO-OPS, Argo,
+PSMSL and the GNSS vertical velocities in `knowledge/connectors/` of
+github.com/open-science-pillars/ocean-science; USGS streamflow and
+groundwater, Hydrocron rivers and lakes and the National Water Model
+retrospective in `knowledge/connectors/` of
+github.com/open-science-pillars/hydrology. This file deliberately
+does not restate them.
 
 **Running from a checkout.** `uv run connectors/observations_mcp.py`
-from the repo root; `--selftest` probes all five sources live.
+from the repo root; `--selftest` probes all seven sources live.
 
 **Version and pin propagation (the runbook).** The server file is the
 unit of review. Its PEP 723 block pins dependency majors, so a launch
