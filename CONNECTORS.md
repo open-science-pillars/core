@@ -103,7 +103,8 @@ offline contract test.
   unknown collection name is refused before it is sent.
 - `gnss_vertical_velocity`. What leaves: nothing but the table
   request itself (one GET of the MIDAS velocity table for the frame,
-  several megabytes, once per process) to geodesy.unr.edu; the
+  5.4 MB for IGS20 as measured on 2026-09-15, once per process) to
+  geodesy.unr.edu; the
   station id or coordinates are matched locally and never sent. No
   credential. When unavailable: a structured error after one bounded
   retry; a station missing from the table is reported with the
@@ -113,11 +114,18 @@ offline contract test.
   metadata, the reach index arrays, one 28-day streamflow chunk and
   its time chunk per chunk in the window, under a budget of fourteen
   chunks); the reach or gauge id is resolved locally against the
-  downloaded index. No credential: the bucket is public and read
+  downloaded index. Measured bound (2026-09-15): the feature index is
+  a one-off 2.9 MB and the gauge index 68 KB per process; a
+  streamflow chunk is 4 to 9 MB, so a call at the full budget makes
+  at most 28 chunk requests and moves roughly 50 to 130 MB. Only the
+  CONUS and Alaska domains are served: the Hawaii and PR stores are
+  blosc/lz4 compressed (and Hawaii's time axis is in minutes), which
+  this server does not decode, so those two names are refused before
+  any request. No credential: the bucket is public and read
   anonymously. When unavailable: a structured error after one
   bounded retry; a window over the budget or outside the
   retrospective's axis is refused before any chunk is read, with the
-  budget or the axis named.
+  budget or the axis named; there is no default window.
 
 **What does not go through it.** Archive holdings. ECCO, SWOT, and
 GRACE retrieval happens through earthaccess as always; this server

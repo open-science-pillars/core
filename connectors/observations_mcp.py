@@ -52,9 +52,15 @@ than a silent head.
 NWM CHUNKS. The National Water Model retrospective is a zarr store
 on a public bucket, not an API: a reach's series lives one column
 deep in chunks of 672 hours by 30000 reaches, so one tool call reads
-the store metadata once, the reach index once, and then one chunk
-per 28-day block of the window (several megabytes each), under a
-chunk budget. The tool states the budget when a window exceeds it.
+the store metadata once, the reach and gauge index arrays once (2.9
+MB and 68 KB), and then one streamflow chunk (4 to 9 MB measured)
+and one time chunk per 28-day block of the window, under a budget of
+14 chunks: at most 28 chunk requests and roughly 50 to 130 MB for one
+call. The tool states the budget when a window exceeds it. Only the
+CONUS and Alaska stores are served: the Hawaii and PR stores are
+blosc/lz4 compressed (and Hawaii's time axis is in minutes), which
+this server does not decode, so those domains are refused before any
+request.
 
 WHAT LEAVES YOUR MACHINE. Query parameters only (station, well,
 float, lake and reach identifiers, coordinates, bounding boxes, time
@@ -110,7 +116,15 @@ NGL_MIDAS = {
 }
 NWM_BUCKET = "https://noaa-nwm-retrospective-3-0-pds.s3.amazonaws.com"
 NWM_RETROSPECTIVE = "NWM Retrospective v3.0"
-NWM_DOMAINS = ("CONUS", "Alaska", "Hawaii", "PR")
+# The domains whose chrtout stores this server decodes (zstd, hours
+# since an instant). Hawaii and PR are blosc/lz4 stores, Hawaii's time
+# axis in minutes, read 2026-09-15; they are refused by name.
+NWM_DOMAINS = ("CONUS", "Alaska")
+NWM_UNSERVED_DOMAINS = {
+    "Hawaii": "its chrtout store is blosc/lz4 compressed and its time axis "
+              "is in minutes since 1994-01-01T00:15",
+    "PR": "its chrtout store is blosc/lz4 compressed",
+}
 NWM_CHUNK_BUDGET = 14     # 28-day streamflow chunks one tool call may read
 FIXTURES = Path(__file__).parent / "fixtures"
 mcp = MCPServer("observations")
@@ -330,7 +344,7 @@ def parse_usgs_field(pages: list[dict]) -> dict:
         rows = sorted(g.pop("rows"), key=lambda r: r["t"])
         out.append({**g, **_cap(rows, tkey=lambda r: r["t"])})
     if not out:
-        raise SourceError("usgs", 200, "no groundwater levels returned for "
+        raise SourceError("usgs", 200, "no field measurements returned for "
                           "that site, parameter and window (the API answers "
                           "an unknown site or parameter with an empty "
                           "collection, not an error); check the site number "
@@ -407,7 +421,10 @@ def zarr_decode(raw: bytes, zarray: dict):
     rather than guessed."""
     comp = (zarray.get("compressor") or {}).get("id")
     if comp == "zstd":
-        buf = zstandard.ZstdDecompressor().decompressobj().decompress(raw)
+        try:
+            buf = zstandard.ZstdDecompressor().decompressobj().decompress(raw)
+        except zstandard.ZstdError as e:
+            raise ValueError(f"zstd decompression failed: {e}")
     elif comp is None:
         buf = raw
     else:
@@ -477,11 +494,14 @@ def nwm_chunk_plan(meta: dict, index: int, start_date: str,
 
 
 def nwm_daily_means(hours, values, epoch: dt.datetime, zattrs: dict,
-                    hour_range: list[int]) -> list[dict]:
+                    hour_range: list[int], fill=None) -> list[dict]:
     """Mean of the hourly values within each UTC calendar day, the
     fill value excluded and the hours counted, with the store's own
-    scale_factor and add_offset applied."""
-    fill = zattrs.get("_FillValue", zattrs.get("missing_value"))
+    scale_factor and add_offset applied. The fill is the array's
+    fill_value, and the attributes' missing_value stands in when the
+    array declares none."""
+    if fill is None:
+        fill = zattrs.get("missing_value", zattrs.get("_FillValue"))
     scale = float(zattrs.get("scale_factor", 1.0))
     offset = float(zattrs.get("add_offset", 0.0))
     days: dict[str, list[float]] = {}
@@ -865,9 +885,9 @@ def gnss_vertical_velocity(station: str = "", lat: float | None = None,
     trends in millimetres per year with the MIDAS uncertainty; up is
     the vertical land motion a tide gauge series carries. A velocity
     in a plate-fixed frame is a different number; this tool serves the
-    IGS frames only. The table is one request of several megabytes,
-    read once per process; the response names when it was fetched
-    and the file's last modification.
+    IGS frames only. The table is one request of about 5.4 MB (IGS20,
+    measured 2026-09-15), read once per process; the response names
+    when it was fetched and the file's last modification.
     Source: geodesy.unr.edu; no credential is sent. Terms: the
     laboratory asks that Blewitt, Hammond and Kreemer (2018, Eos,
     doi:10.1029/2018EO104623) be cited for its data products and
@@ -902,6 +922,13 @@ _nwm_cache: dict[tuple, object] = {}
 
 
 def _nwm_store(domain: str) -> str:
+    """The store URL for a served domain; an unserved or unknown domain
+    is refused here, before any request."""
+    if domain in NWM_UNSERVED_DOMAINS:
+        raise SourceError("nwm", None, f"domain {domain} is not served: "
+                          f"{NWM_UNSERVED_DOMAINS[domain]}, which this "
+                          f"server does not decode; served domains are "
+                          f"{' and '.join(NWM_DOMAINS)}")
     if domain not in NWM_DOMAINS:
         raise SourceError("nwm", None, f"domain {domain!r} is not one of "
                           f"{', '.join(NWM_DOMAINS)}")
@@ -932,9 +959,9 @@ def _nwm_reach_index(domain: str, feature_id: int, usgs_site: str,
     """(index, feature_id, gage_id) of the reach, by NHDPlus feature id
     or by the USGS gauge the store's gage_id axis assigns to it."""
     fids = _nwm_array(domain, "feature_id", fetch)
+    gages = _nwm_array(domain, "gage_id", fetch)
     if usgs_site:
         want = usgs_site.strip().encode()
-        gages = _nwm_array(domain, "gage_id", fetch)
         hits = [i for i, g in enumerate(gages) if g.strip(b"\x00 ") == want]
         if not hits:
             raise SourceError("nwm", 200, f"no reach in the {domain} "
@@ -948,16 +975,13 @@ def _nwm_reach_index(domain: str, feature_id: int, usgs_site: str,
         raise SourceError("nwm", 200, f"feature_id {feature_id} is not on "
                           f"the {domain} retrospective's feature axis "
                           f"({len(fids)} reaches)")
-    gages = _nwm_cache.get((domain, "gage_id"))
-    gage = gages[idx].strip(b"\x00 ").decode() if gages else ""
-    return idx, int(feature_id), gage
+    return idx, int(feature_id), gages[idx].strip(b"\x00 ").decode()
 
 
 @mcp.tool()
 @guarded("nwm")
 def nwm_retrospective_streamflow(feature_id: int = 0, usgs_site: str = "",
-                                 start_date: str = "2020-10-01",
-                                 end_date: str = "2021-09-30",
+                                 start_date: str = "", end_date: str = "",
                                  domain: str = "CONUS") -> dict:
     """Daily mean streamflow at one reach from the NOAA National Water
     Model retrospective, version 3.0, read anonymously from the public
@@ -967,23 +991,32 @@ def nwm_retrospective_streamflow(feature_id: int = 0, usgs_site: str = "",
     feature_id: the NHDPlus v2 ComID of the reach (the store's
     feature_id axis); or usgs_site: a USGS gauge number, resolved to
     the reach the store's gage_id axis assigns it. start_date,
-    end_date: YYYY-MM-DD, inclusive, UTC. domain: CONUS, Alaska,
-    Hawaii or PR.
+    end_date: YYYY-MM-DD, inclusive, UTC, both required (there is no
+    default window, because the widest window the budget allows is
+    also the most expensive call). domain: CONUS or Alaska; Hawaii and
+    PR are refused by name, because their stores are blosc/lz4
+    compressed (Hawaii's time axis in minutes) and this server does
+    not decode them.
     Returns one row per UTC calendar day: the mean of the hourly
     values in cubic metres per second, and the hours that were not
     fill. This is MODEL OUTPUT, not an observation: the retrospective
     is one simulation with one forcing and one channel routing, and
     reaches below dams carry the model's reservoir treatment; the
     hydrology concepts carry that discipline.
-    Cost: the store metadata and the reach index once per process,
-    then one 28-day chunk of a few megabytes per chunk in the window,
-    under a budget of NWM_CHUNK_BUDGET chunks; a wider window is
+    Cost: the store metadata, the 2.9 MB feature index and the 68 KB
+    gauge index once per process, then per 28-day chunk in the window
+    one streamflow chunk (4 to 9 MB measured) and one time chunk,
+    under a budget of NWM_CHUNK_BUDGET chunks: at most 28 chunk
+    requests and roughly 50 to 130 MB in one call; a wider window is
     refused with the budget named. Source: NOAA Open Data
     Dissemination on AWS; no credential is sent. Terms: NOAA data are
     public domain; cite the retrospective version and the access
     date."""
     if not usgs_site and not feature_id:
         raise SourceError("nwm", None, "pass feature_id or usgs_site")
+    if not start_date or not end_date:
+        raise SourceError("nwm", None, "pass start_date and end_date "
+                          "(YYYY-MM-DD); there is no default window")
     store = _nwm_store(domain)
     meta = _nwm_metadata(domain)
     idx, fid, gage = _nwm_reach_index(domain, feature_id, usgs_site)
@@ -1001,7 +1034,8 @@ def nwm_retrospective_streamflow(feature_id: int = 0, usgs_site: str = "",
         hours.extend(t)
         keys.append(key)
     rows = nwm_daily_means(hours, values, plan["epoch"], zattrs,
-                           plan["hour_range"])
+                           plan["hour_range"],
+                           fill=meta["streamflow/.zarray"].get("fill_value"))
     if not rows:
         raise SourceError("nwm", 200, "every hour in the window is fill "
                           "for that reach")
@@ -1261,7 +1295,7 @@ def offline_test() -> int:
           and s["rows"][0]["approval"] in ("Approved", "Provisional")
           and isinstance(s["rows"][0]["qualifiers"], list))
     check("nwis groundwater empty collection is a structured source error",
-          "groundwater" in guarded("usgs")(lambda: parse_usgs_field(
+          "no field measurements" in guarded("usgs")(lambda: parse_usgs_field(
               [{"features": []}]))()["detail"])
     j = json.loads((FIXTURES / "hydrocron_lake.json").read_text())
     h = parse_hydrocron(j)
@@ -1316,18 +1350,27 @@ def offline_test() -> int:
           and nwm_time_epoch(meta).isoformat() == "1979-02-01T01:00:00+00:00"
           and plan["hour_range"][0] == 0)
     rows = nwm_daily_means(t0, col["values"], plan["epoch"],
-                           meta["streamflow/.zattrs"], plan["hour_range"])
+                           meta["streamflow/.zattrs"], plan["hour_range"],
+                           fill=meta["streamflow/.zarray"].get("fill_value"))
     check("nwm daily means: UTC days, fill excluded, scale applied, hours "
           "counted",
           rows[0]["date"] == "1979-02-01" and rows[0]["n_hours"] == 23
           and rows[1]["n_hours"] == 24 and 100 < rows[1]["mean"] < 2000
           and rows[-1]["date"] == "1979-02-28")
+    check("nwm unserved domain, non-zstd chunk and missing window are "
+          "structured errors",
+          "not served" in guarded("nwm")(lambda: _nwm_store("Hawaii"))()["detail"]
+          and "not one of" in guarded("nwm")(lambda: _nwm_store("Mars"))()["detail"]
+          and "zstd" in guarded("nwm")(lambda: zarr_decode(
+              b"not a zstd frame", meta["time/.zarray"]))()["detail"]
+          and "no default window" in nwm_retrospective_streamflow(
+              usgs_site="09380000")["detail"])
     check("nwm window over the chunk budget is a structured error naming it",
           "budget" in guarded("nwm")(lambda: nwm_chunk_plan(
               meta, 0, "1990-01-01", "1992-12-31"))()["detail"]
           and "outside" in guarded("nwm")(lambda: nwm_chunk_plan(
               meta, 0, "1950-01-01", "1950-12-31"))()["detail"])
-    n = 23
+    n = 24
     print(f"offline test: {n - fails}/{n} PASS")
     return fails
 
