@@ -2,6 +2,14 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-09-16 · knowledge/computations/synthetic-trend.md: wrapped under
+  the placement rule (ADR C in the marketplace repository): the concept
+  carries executor.skill: core/basic-statistics, and that skill gains an
+  attested-run section that invokes the executor by the installed
+  plugin's path, binds the runtime parameter and sends the receipt
+  through the attester before a number is quoted. Draft, unsigned; no
+  code, receipt or attester changed. (coordinator)
+
 - 2026-09-12 · computations/synthetic-trend.md (draft): the reference
   attested computation, the global-mean trend of the synthetic fixture,
   with its executor and attester under verification/; the receipt

@@ -10,6 +10,7 @@ parameters:
 computation: ../../verification/trend_computation.py
 executor:
   resource: ../../verification/trend_computation.py
+  skill: core/basic-statistics
   receipt: [run_id, computation, code_sha256, capability, runtime, generated_utc, data, bound_parameters, results, mutation_evidence, caveats]
 attester:
   resource: ../../verification/trend_attester.py

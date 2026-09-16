@@ -134,6 +134,47 @@ day-of-year percentile windows are sized in calendar days too, so a model
 calendar reshapes the window just as it reshapes month-length weights;
 take both from the actual calendar.
 
+## Attested run: the reference trend computation
+
+The one trend this capability attests is the concept
+`knowledge/computations/synthetic-trend.md` (the wrapping rule of ADR C:
+every attested computation is wrapped by a skill in its capability, and
+this skill is the one for a trend). Its executor is the sanctioned
+script `${CLAUDE_PLUGIN_ROOT}/verification/trend_computation.py`; the
+concept names it, the receipt carries its digest, and the attester
+hashes it, so it is never edited or copied. To produce a number a
+runtime can vouch for:
+
+1. Run the executor, binding the one declared parameter, `runtime`, to
+   the name of the runtime that is running it, and choose where the
+   receipt goes:
+
+   ```bash
+   uv run ${CLAUDE_PLUGIN_ROOT}/verification/trend_computation.py \
+     --runtime claude-code --out ${WORK}/receipt.json
+   ```
+
+   It regenerates the synthetic fixture (seed 20260704), applies the
+   chain the golden notebook asserts (area-weighted global mean,
+   anomalies against 1991-2020, Sen's slope under the Hamed-Rao test, a
+   moving-block bootstrap interval) and prints the headline, about
+   0.20 K per decade. The receipt names the capability release and the
+   runtime; no fixture and no receipt is committed anywhere.
+
+2. Attest the receipt before quoting any number from it:
+
+   ```bash
+   uv run ${CLAUDE_PLUGIN_ROOT}/verification/trend_attester.py \
+     ${WORK}/receipt.json --out ${WORK}/attestation.json
+   ```
+
+   The attester regenerates the fixture on its own, recomputes every
+   number and checks the executor's digest; exit 0 is PASS. A receipt
+   that fails attestation is reported as failed, never as a result.
+
+3. Quote the trend and its interval from the attested receipt, naming
+   the run id and the runtime, and cite the concept.
+
 ## Must NOT (hard refusals)
 
 These are hard refusals: statistical-validity gates that hold regardless
