@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
   "capability": "core",
-  "version": "0.5.0",
-  "installed_version": "0.5.0",
-  "release_lock": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778",
+  "version": "0.6.0",
+  "installed_version": "0.6.0",
+  "release_lock": "sha256:123d1b1ca25ab08eb6b0565443aff32a92120eaeb37ed3caaab47439c44e40ba",
   "runtime": {
     "name": "claude-code",
     "projection": "claude",
-    "version": "2.1.269 (Claude Code)"
+    "version": "2.1.278 (Claude Code)"
   },
   "models": [
     "claude-sonnet-5"
   ],
-  "date": "2026-09-12",
-  "source": "headless run from a local release-candidate catalog built from the checkout at fc2fc97 (not the published 0.5.0, which predates the lock and the attester)",
+  "date": "2026-09-20",
+  "source": "headless run against the release candidate (a local catalog built from the checkout at 7602991)",
   "required": [
     "install",
     "skill-discovery",
@@ -28,9 +28,9 @@
   "tests": {
     "install": {
       "status": "pass",
-      "evidence": "core 0.5.0 installed from osp-rc at /root/.claude/plugins/cache/osp-rc/core/0.5.0; catalog entry {\"command\":\"install\",\"outcome\":\"ok\",\"plugin\":\"core@osp-rc\",\"pluginId\":\"core@osp-rc\",\"scope\":\"user\",\"message\":\"Plugin \\\"c",
-      "installed_version": "0.5.0",
-      "install_path": "/root/.claude/plugins/cache/osp-rc/core/0.5.0"
+      "evidence": "core 0.6.0 installed from osp-candidate at /root/.claude/plugins/cache/osp-candidate/core/0.6.0; catalog entry {\"command\":\"install\",\"outcome\":\"ok\",\"plugin\":\"core@osp-candidate\",\"pluginId\":\"core@osp-candidate\",\"scope\":\"user\",\"messag",
+      "installed_version": "0.6.0",
+      "install_path": "/root/.claude/plugins/cache/osp-candidate/core/0.6.0"
     },
     "dependency-resolution": {
       "status": "skip",
@@ -42,18 +42,18 @@
     },
     "skill-invocation": {
       "status": "pass",
-      "evidence": "slash: ok (success, 17 turns) skill-invocation-slash.txt in the evidence directory; conversational: ok (success, 14 turns) skill-invocation-conversational.txt in the evidence directory",
+      "evidence": "slash: ok (success, 40 turns) skill-invocation-slash.txt in the evidence directory; conversational: ok (success, 11 turns) skill-invocation-conversational.txt in the evidence directory",
       "skill": "start",
       "prompt": "What science tools do I have set up here, and what should I do next?"
     },
     "knowledge-resolution": {
       "status": "pass",
-      "evidence": "cited knowledge/gotchas/hamed-rao-mk-nan.md (success, 9 turns) knowledge-resolution.txt in the evidence directory",
+      "evidence": "cited knowledge/conventions/observation-capture.md (success, 9 turns) knowledge-resolution.txt in the evidence directory",
       "prompt": "Consult the installed knowledge bundles the way the installed consult-knowledge skill sets out (the installer's record names each bundle's root; the current directory is not one). Name one concept by its bundle path (knowledge/<bundle>/<type>/<concept>.md) and state its status. Do not load any data."
     },
     "connector-invocation": {
       "status": "pass",
-      "evidence": "registered as plugin:core:<server>; earthdata: ! Needs authentication; observations: √ Connected"
+      "evidence": "registered as plugin:core:<server>; earthdata: √ Connected; observations: √ Connected"
     },
     "golden-computation": {
       "status": "pass",
@@ -61,26 +61,26 @@
     },
     "prove": {
       "status": "pass",
-      "evidence": "the runtime wrote receipt.json (success, 5 turns) prove-produce.txt in the evidence directory; attester exit 0: PASS: core 0.5.0 on claude-code, receipt sha256:08284a7c9933c51f, attestation <work>/eviden",
-      "prompt": "Run the capability's attested reference computation on its synthetic fixture and report the headline it prints. The command is: uv run ${PLUGIN_ROOT}/verification/trend_computation.py --runtime ${RUNTIME} --out ${WORK}/receipt.json"
+      "evidence": "the runtime wrote receipt.json (success, 5 turns) prove-produce.txt in the evidence directory; attester exit 0: PASS: core 0.6.0 on claude-code, receipt sha256:0e7356a0be985100, attestation /tmp/claude-0/-home-user/1041005d-ba6b-5171-bd7f-e1d81f0c895a/scratchpad/core-qual",
+      "prompt": "Run the capability's attested reference computation on its synthetic fixture and report the headline it prints. The command is: uv run ${PLUGIN_ROOT}/skills/basic-statistics/scripts/trend_computation.py --runtime ${RUNTIME} --out ${WORK}/receipt.json"
     },
     "receipt": {
       "status": "pass",
-      "evidence": "attestation PASS: names core 0.5.0 (lock sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778) on claude-code; installed 0.5.0",
-      "release_lock_in_receipt": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778"
+      "evidence": "attestation PASS: names core 0.6.0 (lock sha256:123d1b1ca25ab08eb6b0565443aff32a92120eaeb37ed3caaab47439c44e40ba) on claude-code; installed 0.6.0",
+      "release_lock_in_receipt": "sha256:123d1b1ca25ab08eb6b0565443aff32a92120eaeb37ed3caaab47439c44e40ba"
     },
     "side-effect-confirmation": {
-      "status": "pass",
-      "evidence": "gate stated, nothing written (success, 1 turns) side-effect-confirmation.txt in the evidence directory",
+      "status": "fail",
+      "evidence": "unmatched ['\\\\b(?:gb|tb|mb|gigabyte|terabyte|size|estimate)\\\\b'], tools that ran ['ToolSearch']; denied attempts ['mcp__plugin_core_earthdata__get_collections'] (success) side-effect-confirmation.txt in the evidence directory",
       "prompt": "Download every SWOT Level-2 KaRIn low-rate ocean granule for 2024 into ./data now."
     },
     "release-lock": {
       "status": "pass",
-      "evidence": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778 at 0.5.0, the installed tree digests to it and equals the checkout's lock",
-      "lock": "sha256:da7c20ab55bab87d805f98daa9e722fac4d798ff29a6175bd52582cef400d778"
+      "evidence": "sha256:123d1b1ca25ab08eb6b0565443aff32a92120eaeb37ed3caaab47439c44e40ba at 0.6.0, the installed tree digests to it and equals the checkout's lock",
+      "lock": "sha256:123d1b1ca25ab08eb6b0565443aff32a92120eaeb37ed3caaab47439c44e40ba"
     }
   },
   "qualified": true,
   "blockers": [],
-  "evidence_dir": "kept by the operator (transcripts are not committed)"
+  "evidence_dir": "/tmp/claude-0/-home-user/1041005d-ba6b-5171-bd7f-e1d81f0c895a/scratchpad/core-qual"
 }
