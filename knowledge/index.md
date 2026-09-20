@@ -25,4 +25,4 @@ review date, status stable.
 
 ## computations (OKF v0.2 section 10)
 
-- [Global-mean temperature trend of the synthetic fixture (attested)](computations/synthetic-trend.md), status: draft; the reference computation whose receipt names the capability release and the runtime, verified by verification/trend_attester.py
+- [Global-mean temperature trend of the synthetic fixture (attested)](computations/synthetic-trend.md), status: draft; the reference computation whose receipt names the capability release and the runtime, verified by skills/basic-statistics/scripts/trend_attester.py

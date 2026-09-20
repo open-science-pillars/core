@@ -48,8 +48,8 @@ repository (or from the install path `claude plugin list` shows), in a
 terminal with `uv`:
 
 ```bash
-uv run verification/trend_computation.py --runtime claude-code --out /tmp/receipt.json
-uv run verification/trend_attester.py /tmp/receipt.json --out /tmp/attestation.json
+uv run skills/basic-statistics/scripts/trend_computation.py --runtime claude-code --out /tmp/receipt.json
+uv run skills/basic-statistics/scripts/trend_attester.py /tmp/receipt.json --out /tmp/attestation.json
 ```
 
 The first command prints the headline (about 0.20 K per decade) and

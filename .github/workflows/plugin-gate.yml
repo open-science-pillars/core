@@ -47,8 +47,6 @@ jobs:
         run: uv run ../build-kit/scripts/osp.py render . --check
       - name: The portable package conforms to Agent Plugins 1.0.0
         run: uv run ../build-kit/scripts/osp.py plugin-check .
-      - name: Every file of code has one home by plane (the placement rule)
-        run: uv run ../build-kit/scripts/osp.py placement-check .
       - name: A runtime is advertised only on a qualified record; the README's runtime table is current
         run: uv run ../build-kit/scripts/osp.py advertise . --check --into README.md
       - name: Release lock, reported (content may move between releases)

@@ -2,6 +2,25 @@
 
 Newest first. One line per change: date, concept path, what changed, who.
 
+- 2026-09-20 · knowledge/computations/synthetic-trend.md: the
+  computation moved into the skill that runs it (a computation is a
+  skill, ADR E in the marketplace repository). verification/trend_computation.py
+  and verification/trend_attester.py are now
+  skills/basic-statistics/scripts/trend_computation.py and
+  skills/basic-statistics/scripts/trend_attester.py; the concept's
+  computation, executor.resource and attester.resource name them there,
+  and the retired key executor.skill is removed, because the concept
+  names the file and the skill is beside it. The fixture generator stays
+  at verification/fixtures/make_fixtures.py, where the golden and both
+  scripts reach it, and verification/analysis_pipeline.py now runs the
+  executor and the attester it names. Concept sha256 585605d83225 ->
+  c0a8ffa3ca53. Nothing about any number changed: the reference run
+  reproduced at the new path, Sen's slope 0.198695697 K/decade with the
+  same interval to the last digit, attested PASS; the receipt's
+  code_sha256 and run identifier follow the file, as the contract
+  requires. Draft, unsigned; the maintainer re-signs after merge.
+  (claude-code)
+
 - 2026-09-16 · knowledge/computations/synthetic-trend.md: wrapped under
   the placement rule (ADR C in the marketplace repository): the concept
   carries executor.skill: core/basic-statistics, and that skill gains an

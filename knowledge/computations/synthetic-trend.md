@@ -7,13 +7,12 @@ tags: [trend, mann-kendall, hamed-rao, bootstrap, area-weighting, attested, rece
 runtime: python
 parameters:
   - { name: runtime, type: "the runtime that ran the executor (claude-code, claude-cowork, openai-codex, ...)", required: true }
-computation: ../../verification/trend_computation.py
+computation: ../../skills/basic-statistics/scripts/trend_computation.py
 executor:
-  resource: ../../verification/trend_computation.py
-  skill: core/basic-statistics
+  resource: ../../skills/basic-statistics/scripts/trend_computation.py
   receipt: [run_id, computation, code_sha256, capability, runtime, generated_utc, data, bound_parameters, results, mutation_evidence, caveats]
 attester:
-  resource: ../../verification/trend_attester.py
+  resource: ../../skills/basic-statistics/scripts/trend_attester.py
 generated: { by: claude-code/fable-5.1, at: 2026-09-12T06:30:00Z }
 status: draft
 sources:
@@ -73,5 +72,21 @@ a half width near 0.02 K/decade; the attester holds any run to the
 fixture's imposed band (0.15 to 0.25) and to an interval that contains
 the estimate with a half width between 0 and 0.05.
 
+**Where the code is.** The executor and the attester are the scripts of
+the skill that runs them, `skills/basic-statistics/scripts/`, and this
+concept names them from here (a computation is a skill, ADR E in the
+marketplace repository). The generator the attester regenerates the
+fixture from stays under `verification/fixtures/`, where the golden
+that proves the chain reaches it too, and no fixture is committed.
+
 **Status.** Draft until a steward signs it; the executor and attester
 run in the capability's gate and in the qualification harness today.
+The code moved out of `verification/` into the skill on 2026-09-20 and
+the paths above followed it; nothing about the computation changed but
+the paths it resolves. The reference run reproduced at the new path on
+claude-code under core 0.5.0: Sen's slope 0.198695697 K/decade, the 95
+percent interval 0.1968368596519823 to 0.20047346345435277, Hamed-Rao
+p 0.0, receipt run sha256:ab6dc5b7706c0dd2, attested PASS on all nine
+checks. The receipt's `computation` and `code_sha256` name the new path
+and the moved file, so the run identifier changed with them, as the
+contract requires; no value did.

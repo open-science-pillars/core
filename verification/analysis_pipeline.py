@@ -13,8 +13,12 @@
 # computational substrate, end to end on the synthetic fixture:
 # load -> QC -> anomaly -> Mann-Kendall trend -> figure -> report.
 # Asserts section-complete report content, a knowledge-concept citation,
-# and an uncertainty statement on the headline trend. Headless green via
-# `python verification/analysis_pipeline.py` (nonzero exit on failure).
+# and an uncertainty statement on the headline trend. It then proves the
+# two scripts of the attested computation that
+# knowledge/computations/synthetic-trend.md declares, in the skill that
+# runs them: the executor writes a receipt and the attester returns a
+# verdict on it. Headless green via
+# `uv run verification/analysis_pipeline.py` (nonzero exit on failure).
 
 import marimo
 
@@ -227,6 +231,56 @@ generated {now} by verification/analysis_pipeline.py.
     print(f"  report: {report_path}")
     print(f"  figure: {figure_path}")
     return (report_md,)
+
+
+@app.cell
+def _(HERE):
+    # PROVE: the attested computation, run at the path its concept names.
+    # What proves a script is under verification/, so this golden names
+    # both scripts of knowledge/computations/synthetic-trend.md: the
+    # executor writes a receipt and the attester recomputes every number
+    # in it, on a regenerated fixture, with no language model in either
+    # path. Each script is run as `uv run`, the way a runtime runs it,
+    # so it resolves its own declared dependencies. The direction is one
+    # way: a golden names a skill's scripts, and no skill names anything
+    # under verification/.
+    import json as _json
+    import subprocess
+    import tempfile
+    from pathlib import Path as _Path
+
+    scripts = HERE.parent / "skills" / "basic-statistics" / "scripts"
+    executor = scripts / "trend_computation.py"
+    attester = scripts / "trend_attester.py"
+    for required in (executor, attester):
+        assert required.exists(), f"missing {required}"
+
+    work = _Path(tempfile.mkdtemp())
+    receipt_path = work / "receipt.json"
+    produced = subprocess.run(
+        ["uv", "run", str(executor), "--runtime", "golden", "--out", str(receipt_path)],
+        capture_output=True, text=True,
+    )
+    assert produced.returncode == 0, f"executor failed:\n{produced.stdout}{produced.stderr}"
+    receipt = _json.loads(receipt_path.read_text())
+    assert receipt["computation"] == "skills/basic-statistics/scripts/trend_computation.py", \
+        f"the receipt names {receipt['computation']}, not the path the concept names"
+    for field in ("run_id", "code_sha256", "capability", "runtime", "data",
+                  "bound_parameters", "results", "mutation_evidence", "caveats"):
+        assert field in receipt, f"receipt is missing {field}"
+
+    attested = subprocess.run(
+        ["uv", "run", str(attester), str(receipt_path)], capture_output=True, text=True,
+    )
+    assert attested.returncode == 0, \
+        f"attester did not pass a good receipt:\n{attested.stdout}{attested.stderr}"
+    assert "PASS" in attested.stdout, attested.stdout
+    for name in ("fields", "code", "release", "runtime", "data", "series",
+                 "recompute", "evidence", "plausible"):
+        assert f"ok   {name}" in attested.stdout, \
+            f"the attester did not report {name}:\n{attested.stdout}"
+    print(f"attested run {receipt['run_id']}: {produced.stdout.strip().splitlines()[-1]}")
+    return
 
 
 if __name__ == "__main__":
