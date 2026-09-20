@@ -12,11 +12,11 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
       - name: core golden notebook (synthetic fixture, self-generating, no secrets)
+        # The golden runs the attested computation too: the executor in
+        # skills/basic-statistics/scripts/ writes a receipt and the
+        # attester beside it returns the verdict, so the workflow runs
+        # the golden and nothing else.
         run: uv run --python 3.11 verification/analysis_pipeline.py
-      - name: PROVE, the attested reference computation (executor, then the deterministic attester)
-        run: |
-          uv run --python 3.11 verification/trend_computation.py --runtime github-actions --out "$RUNNER_TEMP/receipt.json"
-          uv run --python 3.11 verification/trend_attester.py "$RUNNER_TEMP/receipt.json" --out "$RUNNER_TEMP/attestation.json"
 # Data-requiring goldens (ocean-science and hydrology ECCO/NWIS budgets) need an
 # Earthdata login and cached granules; they run as a credentialed nightly job,
 # not in this per-PR secret-free workflow.

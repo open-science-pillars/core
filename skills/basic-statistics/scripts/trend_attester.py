@@ -86,7 +86,7 @@ def main() -> int:
     sanctioned = tc.sha256_file(HERE / "trend_computation.py")
     check("code", receipt.get("code_sha256") == sanctioned,
           f"receipt {receipt.get('code_sha256')} vs sanctioned {sanctioned}")
-    identity = tc.capability_identity(HERE.parent)
+    identity = tc.capability_identity(tc.PACKAGE_ROOT)
     cap = receipt.get("capability") or {}
     check("release", cap == identity, f"receipt names {cap}; this tree is {identity}")
     rt = receipt.get("runtime") or {}
@@ -94,7 +94,7 @@ def main() -> int:
 
     data = receipt.get("data") or {}
     seed_ok = data.get("seed") == tc.SEED
-    generator = HERE / "fixtures" / "make_fixtures.py"
+    generator = tc.FIXTURES / "make_fixtures.py"
     with tempfile.TemporaryDirectory() as tmp:
         fx = tc.fixture(Path(tmp) / "era5like_t2m.nc")
         fixture_digest = tc.sha256_file(fx)
@@ -133,7 +133,7 @@ def main() -> int:
     verdict = "PASS" if all(c["ok"] for c in checks) else "FAIL"
     attestation = {
         "verdict": verdict,
-        "attester": "verification/trend_attester.py",
+        "attester": "skills/basic-statistics/scripts/trend_attester.py",
         "attester_sha256": tc.sha256_file(Path(__file__).resolve()),
         "computation_sha256": sanctioned,
         "receipt": receipt_path.name,

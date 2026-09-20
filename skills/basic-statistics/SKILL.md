@@ -137,20 +137,21 @@ take both from the actual calendar.
 ## Attested run: the reference trend computation
 
 The one trend this capability attests is the concept
-`knowledge/computations/synthetic-trend.md` (the wrapping rule of ADR C:
-every attested computation is wrapped by a skill in its capability, and
-this skill is the one for a trend). Its executor is the sanctioned
-script `${CLAUDE_PLUGIN_ROOT}/verification/trend_computation.py`; the
-concept names it, the receipt carries its digest, and the attester
-hashes it, so it is never edited or copied. To produce a number a
-runtime can vouch for:
+`knowledge/computations/synthetic-trend.md` (a computation is a skill,
+ADR E in the marketplace repository: the concept lives in the package
+that runs it and names the code in the skill beside it, and this skill
+is the one for a trend). Its executor is the sanctioned script
+`${CLAUDE_PLUGIN_ROOT}/skills/basic-statistics/scripts/trend_computation.py`,
+in `scripts/` beside this file; the concept names it, the receipt
+carries its digest, and the attester hashes it, so it is never edited
+or copied. To produce a number a runtime can vouch for:
 
 1. Run the executor, binding the one declared parameter, `runtime`, to
    the name of the runtime that is running it, and choose where the
    receipt goes:
 
    ```bash
-   uv run ${CLAUDE_PLUGIN_ROOT}/verification/trend_computation.py \
+   uv run ${CLAUDE_PLUGIN_ROOT}/skills/basic-statistics/scripts/trend_computation.py \
      --runtime claude-code --out ${WORK}/receipt.json
    ```
 
@@ -164,7 +165,7 @@ runtime can vouch for:
 2. Attest the receipt before quoting any number from it:
 
    ```bash
-   uv run ${CLAUDE_PLUGIN_ROOT}/verification/trend_attester.py \
+   uv run ${CLAUDE_PLUGIN_ROOT}/skills/basic-statistics/scripts/trend_attester.py \
      ${WORK}/receipt.json --out ${WORK}/attestation.json
    ```
 

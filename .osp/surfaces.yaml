@@ -46,13 +46,13 @@ probes:
     - core
   prove:
     prompt: 'Run the capability''s attested reference computation on its synthetic fixture and report
-      the headline it prints. The command is: uv run ${PLUGIN_ROOT}/verification/trend_computation.py
+      the headline it prints. The command is: uv run ${PLUGIN_ROOT}/skills/basic-statistics/scripts/trend_computation.py
       --runtime ${RUNTIME} --out ${WORK}/receipt.json'
     receipt: ${WORK}/receipt.json
     command:
     - uv
     - run
-    - ${PLUGIN_ROOT}/verification/trend_attester.py
+    - ${PLUGIN_ROOT}/skills/basic-statistics/scripts/trend_attester.py
     - ${WORK}/receipt.json
     - --out
     - ${WORK}/attestation.json

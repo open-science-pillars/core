@@ -82,7 +82,11 @@ to end.
   `consult-knowledge`, and the three workflows `start`, `discover-data`
   and `report`. The report workflow enforces the house rule: no headline
   number without an uncertainty statement or an explicit reason there is
-  none.
+  none. A computation is a skill, so `basic-statistics` also carries the
+  scripts of the attested reference computation in its `scripts/`
+  directory: `trend_computation.py`, the sanctioned executor, and
+  `trend_attester.py`, the deterministic attester that checks its
+  receipt.
 - **Agents** (`agents/`): `knowledge-linter` checks a knowledge bundle for
   problems; `knowledge-seeder` drafts new evidence-linked concepts. Both
   propose; neither merges on its own.
@@ -94,9 +98,11 @@ to end.
   and arrive with the domain capabilities; `consult-knowledge` states how
   every installed bundle is found and cited.
 - **Verification** (`verification/`): `analysis_pipeline.py`, the golden
-  notebook that re-checks the workflows on a synthetic fixture;
-  `trend_computation.py` and `trend_attester.py`, the attested reference
-  computation and the deterministic attester that checks its receipt.
+  notebook that re-checks the workflows on a synthetic fixture and then
+  proves the two scripts of the attested reference computation, and
+  `fixtures/make_fixtures.py`, the deterministic generator the golden,
+  the executor and the attester each regenerate that fixture from. No
+  fixture is committed.
 - **Evals** (`evals/`): four hand-graded judgment cases (`area-weighting`,
   `fill-value-detection`, `trend-method`, `uncertainty-statement`) and
   their seed results.
