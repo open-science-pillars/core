@@ -1,6 +1,6 @@
 {
   "name": "core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Foundation: earth science data formats, statistics, uncertainty quantification, cartography, quality control, reproducibility, analysis review.",
   "author": {
     "name": "Open Science Pillars Community"

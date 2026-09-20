@@ -50,11 +50,11 @@ marketplace repository's
 [docs/runtime-distribution.md](https://github.com/open-science-pillars/marketplace/blob/main/docs/runtime-distribution.md).
 
 <!-- osp-runtimes:start -->
-Runtime support for core 0.5.0 (release lock `sha256:da7c20ab55ba`), rendered by build-kit's `osp.py advertise` from `.osp/surfaces.yaml` and the qualification records; edit those, not this block.
+Runtime support for core 0.6.0 (release lock `sha256:123d1b1ca25a`), rendered by build-kit's `osp.py advertise` from `.osp/surfaces.yaml` and the qualification records; edit those, not this block.
 
 | Runtime | Role | Declared status | Qualification |
 |---|---|---|---|
-| Claude Code | development and runtime, required | supported | Qualified on 2026-09-12 |
+| Claude Code | development and runtime, required | supported | Supported (development environment) (record is for another release) |
 | Claude Cowork | runtime, required | tested | Not qualified |
 | OpenAI Codex | runtime, required | planned | Not qualified |
 | Claude Science | future runtime | limited-release | Outside the required matrix |
