@@ -54,9 +54,9 @@ Runtime support for core 0.6.0 (release lock `sha256:123d1b1ca25a`), rendered by
 
 | Runtime | Role | Declared status | Qualification |
 |---|---|---|---|
-| Claude Code | development and runtime, required | supported | Supported (development environment) (record is for another release) |
-| Claude Cowork | runtime, required | tested | Not qualified |
-| OpenAI Codex | runtime, required | planned | Not qualified |
+| Claude Code | development and runtime, required | supported | Qualified on 2026-09-20 |
+| Claude Cowork | runtime, required | tested | Not qualified, waived for this release (Claude Cowork is not qualified for this release. A Cowork record is a run by a person with Cowork in front of them, installing from the catalog, and no such run has been made for 0.6.0; the runtime cannot be driven headlessly, so the coordinator carrying this release on the maintainer's behalf cannot make one either. This repeats the decision recorded for land-ice 0.1.0 on 2026-09-19 for the same reason. Nothing about the capability is known to fail there: its projection renders and validates in the gate, and the Claude Code run for this release passed every required test. The surface is not advertised until a run exists.; human:PaulMRamirez, 2026-09-20) |
+| OpenAI Codex | runtime, required | planned | Not qualified, waived for this release (OpenAI Codex is not qualified for this release. No release in this organization has been qualified on Codex: the Agent Plugins projection renders and passes plugin-check in the gate, but the Codex leg has never been exercised, so there is no procedure to run and nothing to record. This repeats the decision recorded for land-ice 0.1.0 on 2026-09-19 for the same reason. The surface is not advertised, and the projection is published as conformant rather than as tested.; human:PaulMRamirez, 2026-09-20) |
 | Claude Science | future runtime | limited-release | Outside the required matrix |
 
 A runtime is advertised as supported only on a qualified record for this exact release; a release stays valid when a runtime is not qualified, and that runtime is simply not advertised.
