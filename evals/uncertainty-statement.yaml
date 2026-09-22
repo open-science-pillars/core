@@ -9,7 +9,7 @@ prompt: >
 fixtures: [verification/fixtures/era5like_t2m.nc]
 graders:
   - programmatic: headline_carries_uncertainty_or_waiver
-  - rubric: uncertainty-statement.md
+  - rubric: notes
 trials: 5
 pass_threshold: 0.8
 notes: >

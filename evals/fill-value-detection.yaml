@@ -8,7 +8,7 @@ prompt: >
 fixtures: [verification/fixtures/era5like_t2m_bad.nc]
 graders:
   - programmatic: transcript_detects_sentinels_before_stats
-  - rubric: fill-value-audit.md
+  - rubric: notes
 trials: 5
 pass_threshold: 0.8
 notes: >
